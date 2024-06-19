@@ -94,3 +94,5 @@
 [댓글 삭제]
 - 자기가 작성한 댓글만 삭제 가능
 
+## ERD
+![학습 커뮤니티 ERD](images/learningCommunityERD.png)

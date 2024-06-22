@@ -20,6 +20,14 @@
 - 회원 정보 수정 가능
 - 조회 내용: 이름, 이메일, 생년월일, 아이디, 닉네임, 직업, 성별, 관심분야, 현재 포인트  
 
+<< 엔드포인트 >>
+  - POST /users/register
+  - POST /users/login
+  - GET /users/me
+  - PUT /users/me
+  - DELETE /users/me
+
+
 ### 관리자
 [회원 조회]
 - 전체 회원 조회
@@ -38,7 +46,15 @@
 [포인트 회수]
 - 모니터링을 통해 학습인증이 부실하거나 잘못됐을 경우 회수
 - 신고내용 참고
-  
+
+<< 엔드포인트 >>
+  - GET /admin/users
+  - GET /admin/users/{id}
+  - PUT /admin/users/{id}/reset-password
+  - PUT /admin/users/{id}/change-role
+  - POST /admin/users/{id}/points
+  - DELETE /admin/users/{id}/points
+
 ## 일지 작성
 ---
 ### 일반 회원
@@ -59,12 +75,31 @@
 - 학습내용 인증(사진 or 영상 모두 가능)
 - 비공개 / 공개 설정 
 
+<< 엔드포인트 >>
+  - POST /challenges
+  - GET /challenges
+  - GET /challenges/{id}
+  - PUT /challenges/{id}
+  - DELETE /challenges/{id}
+**파일 업로드(이미지 / 영상)
+  - POST /files/upload
+  - GET /files/{filename}
+
+
 [나의 일지 조회]
 - List로 보기
 - 일지 상세보기
 
 [일지 수정]
 [일지 삭제]
+
+<< 엔드포인트 >>
+  - POST /diaries
+  - GET /diaries
+  - GET /diaries/{id}
+  - PUT /diaries/{id}
+  - DELETE /diaries/{id}
+
 
 ## 검색 기능 (일반회원, 관리자 공통)
 ---
@@ -84,6 +119,11 @@
 [러닝 일지 상세 조회]
 - 챌린지 등록자의 일지 내용을 조회
 
+<< 엔드 포인트 >>
+  - GET /search/challenges
+  - GET /search/journals
+
+
 ## 댓글 기능 (일반회원, 관리자 공통)
 ---
 [댓글 작성 기능]
@@ -97,6 +137,13 @@
 
 [댓글 삭제]
 - 자기가 작성한 댓글만 삭제 가능
+
+<< 엔드포인트 >>
+  - POST /comments
+  - GET /comments
+  - GET /comments/{id}
+  - DELETE /comments/{id}
+
 
 ## 사용 기술
 - 언어 : Java 21

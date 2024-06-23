@@ -1,0 +1,66 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+          filters:
+            - StripPrefix=1
+        - id: admin-service
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/challenges/**
+          filters:
+            - StripPrefix=1
+        - id: diary-service
+          uri: lb://DIARY-SERVICE
+          predicates:
+            - Path=/diaries/**
+          filters:
+            - StripPrefix=1
+        - id: comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/comments/**
+          filters:
+            - StripPrefix=1
+        - id: point-service
+          uri: lb://POINT-SERVICE
+          predicates:
+            - Path=/points/**
+          filters:
+            - StripPrefix=1
+        - id: file-service
+          uri: lb://FILE-SERVICE
+          predicates:
+            - Path=/files/**
+          filters:
+            - StripPrefix=1
+        - id: search-service
+          uri: lb://SEARCH-SERVICE
+          predicates:
+            - Path=/search/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+
+

@@ -42,6 +42,11 @@
 - 일정 포인트 도달하면 러너 배지 부여(ex. 500point -> bronze / 1000point -> silver)
 - 학습 완료 및 목표 달성 인증 시 추가 포인트 지급(+5000point)
 *단, 추가 포인트는 관리자가 인증 내용을 검토완료한 후에 지급
+*배지(level)
+  1)bronze(500point)
+  2)silver(1000point)
+  3)gold((2500point)
+  4)master(6000point)
 
 [포인트 회수]
 - 모니터링을 통해 학습인증이 부실하거나 잘못됐을 경우 회수
@@ -52,8 +57,7 @@
   - GET /admin/users/{id}
   - PUT /admin/users/{id}/reset-password
   - PUT /admin/users/{id}/change-role
-  - POST /admin/users/{id}/points
-  - DELETE /admin/users/{id}/points
+  - PUT /admin/users/{id}/points
 
 ## 일지 작성
 ---
@@ -106,7 +110,7 @@
 [챌린지 전체 조회]
 - 제목, 날짜, 작성자 보기
 - 러닝 챌린지 등록(일지x)글 조회
-- 진행중, 완료 등 표시
+- 진행중, 완료 등 표시  
 
 [챌린지 상세 조회]
 - 제목, 날짜 작성자 + 상세내용 보기
@@ -118,6 +122,19 @@
 
 [러닝 일지 상세 조회]
 - 챌린지 등록자의 일지 내용을 조회
+
+*검색 조건 (사용자 설정) 
+  - 제목(title): 부분 일치 검색
+  - 작성자(user_id): 정확히 일치하는 사용자 ID
+  - 진행 상태(status): In Progress, Incomplete, Completed 중 하나
+  - 대분야
+
+*정렬 조건
+  - 검색어와 일치율 높은 순으로 정렬 (가중치 x 0.7)
+  - 작성일시 기준 최신 순으로 정렬 (가중치 x 0.3)
+*pagination
+  - 1페이지 당 게시물 10개씩 보여주기
+  - 페이지 노출 10개씩
 
 << 엔드 포인트 >>
   - GET /search/challenges

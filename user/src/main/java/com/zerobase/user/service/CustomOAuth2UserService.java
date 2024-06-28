@@ -30,11 +30,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
+        //로그인 사용자 정보 가져오기
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        //어떤 소셜 계정(provider)을 사용했는지 가져오기
         String provider = userRequest.getClientRegistration().getRegistrationId();
+        //provider에 따라 필요한 정보 mapping
         SocialUserInfo userInfo = getUserInfo(provider, oAuth2User.getAttributes());
 
+        //사용자의 식별값(provider마다 다름)과 사용자명 가져오기
         String providerId = userInfo.getProviderId();
         String name = userInfo.getName();
 

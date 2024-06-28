@@ -2,6 +2,7 @@ package com.zerobase.user.config;
 
 import com.zerobase.user.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -21,9 +23,7 @@ public class SecurityConfig {
         http.csrf(withDefaults())
                 .cors(withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/index.html",
-                                "/images/**",
-                                "/permitAllConents.html",
+                        .requestMatchers(
                                 "/login/**",
                                 "/error/**")
                         .permitAll()
@@ -32,10 +32,23 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                        .defaultSuccessUrl("/home", true)
                         .userInfoEndpoint(userInfo -> userInfo
-                        .userService(customOAuth2UserService)))
-                .logout(withDefaults());
+                        .userService(customOAuth2UserService))
+                        .successHandler((request, response, authentication) -> {
+                            log.info("Login successful: {}", authentication.getPrincipal());
+                            response.sendRedirect("/home");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            log.error("Login failed", exception);
+                            response.sendRedirect("/error");
+                        }))
+                .logout(logout -> logout
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            log.info("Logout successful");
+                            response.sendRedirect("/login");
+                        })
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"));
         return http.build();
     }
 }

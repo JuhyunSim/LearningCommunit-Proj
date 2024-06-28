@@ -30,20 +30,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        //로그 추가: OAuth2UserRequest 정보
+        log.info("OAuth2UserRequest: {}", userRequest);
+
         //로그인 사용자 정보 가져오기
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.info("OAuth2User: {}", oAuth2User);
+
         //어떤 소셜 계정(provider)을 사용했는지 가져오기
         String provider = userRequest.getClientRegistration().getRegistrationId();
+        log.info("Provider: {}", provider);
+
         //provider에 따라 필요한 정보 mapping
         SocialUserInfo userInfo = getUserInfo(provider, oAuth2User.getAttributes());
+        log.info("UserInfo: {}", userInfo);
 
         //사용자의 식별값(provider마다 다름)과 사용자명 가져오기
         String providerId = userInfo.getProviderId();
         String name = userInfo.getName();
+        log.info("ProviderId: {}, Name: {}", providerId, name);
 
         // 사용자 정보 저장 또는 업데이트
-        Optional<MemberEntity> userOptional = memberRepository.findByProviderAndProviderId(provider, providerId);
-        if (userOptional.isEmpty()) {
+        Optional<MemberEntity> memberOptional = memberRepository.findByProviderAndProviderId(provider, providerId);
+        if (memberOptional.isEmpty()) {
             MemberEntity memberEntity = new MemberEntity();
             memberEntity.setProvider(provider);
             memberEntity.setProviderId(providerId);
@@ -51,7 +60,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberEntity.setLevel(MemberLevel.BEGINNER);
             memberEntity.setPoints(0L);
             memberRepository.save(memberEntity);
+            log.info("New MemberEntity saved: name {}",
+                    memberEntity.getName());
+        } else {
+            log.info("Existing MemberEntity found: name {}",
+                    memberOptional.get().getName());
         }
+
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),

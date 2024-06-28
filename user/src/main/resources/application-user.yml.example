@@ -2,9 +2,9 @@ spring:
   application:
     name: user
   datasource:
-    url: jdbc:postgresql://13.209.127.192:5433/learning_user_db
-    username: learning_user
-    password: learning1234
+    url: jdbc:postgresql://11.111.111.111:5433/learning_user_db
+    username: user
+    password: 1111
   jpa:
     hibernate:
       ddl-auto: create

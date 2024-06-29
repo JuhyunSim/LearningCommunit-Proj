@@ -1,5 +1,7 @@
 package com.zerobase.user.security;
 
+import com.zerobase.user.enums.Provider;
+
 import java.util.Map;
 
 public class GoogleUserInfo implements SocialUserInfo{
@@ -10,8 +12,8 @@ public class GoogleUserInfo implements SocialUserInfo{
     }
 
     @Override
-    public String getProvider() {
-        return "google";
+    public Provider getProvider() {
+        return Provider.GOOGLE;
     }
 
     @Override

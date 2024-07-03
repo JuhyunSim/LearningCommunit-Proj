@@ -3,12 +3,10 @@ package com.zerobase.user.entity;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
 import com.zerobase.user.enums.Provider;
-import com.zerobase.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity(name = "member")
 @Getter
@@ -23,7 +21,6 @@ public class MemberEntity {
     private String loginId;
     private String password;
     private String email;
-    private String phoneNumber;
     private String nickName;
     private String name;
     private LocalDate birth;
@@ -37,10 +34,6 @@ public class MemberEntity {
     private String providerId;
     @Enumerated(EnumType.STRING)
     private MemberLevel level;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private List<Role> roles = List.of(Role.USER);
 
     @Builder
     MemberEntity(

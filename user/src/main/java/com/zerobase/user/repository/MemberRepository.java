@@ -12,4 +12,12 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findByEmail(String email);
 
     Optional<MemberEntity> findByProviderAndProviderId(Provider provider, String providerId);
+
+    Optional<MemberEntity> findByLoginId(String username);
+
+    boolean existsByLoginId(String loginId);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String encryptedPhoneNumber);
 }

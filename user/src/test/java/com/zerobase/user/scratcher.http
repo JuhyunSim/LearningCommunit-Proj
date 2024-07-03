@@ -1,0 +1,21 @@
+### Get CSRF Token
+GET http://localhost:8080/csrf-token
+Content-Type: application/json
+
+###회원가입
+POST http://localhost:8080/register
+Content-Type: application/json
+X-CSRF-TOKEN: Jphj0DQLbocgAcwxvdIYQFkTSgBmP5ftGc16OrFSnKbrY7AyH6EHtlU8CuUNZ_hVjf8sd28mZ2JRD_PAevxOW4dgrZ_aVNYF
+
+{
+  "loginId": "testUser",
+  "password": "Test@1234",
+  "email": "test@example.com",
+  "phoneNumber": "01012345678",
+  "nickName": "TestNick",
+  "name": "Test Name",
+  "birth": "1990-01-01",
+  "job": "학생",
+  "interests": "개발",
+  "gender": "MALE"
+}

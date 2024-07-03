@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Security ###
-application-user.yml
+properties.env

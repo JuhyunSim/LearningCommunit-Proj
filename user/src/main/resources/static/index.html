@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth2 Demo</title>
+</head>
+<body>
+<h1 id="welcome-message">Loading...</h1>
+<script>
+    async function fetchUser() {
+        const response = await fetch('/api/user');
+        const user = await response.json();
+        if (user.name) {
+            document.getElementById('welcome-message').innerText = `Welcome, ${user.name}`;
+        } else {
+            document.getElementById('welcome-message').innerText = 'Not authenticated';
+        }
+    }
+
+    fetchUser();
+</script>
+</body>
+</html>

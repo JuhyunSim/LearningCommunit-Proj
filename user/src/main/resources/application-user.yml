@@ -1,10 +1,11 @@
+
 spring:
   application:
     name: user
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ENC(Wak/a5yg1CCPFb9xJUK39RLueFwXQjOptfZ3Aw4dhZRqcYUBatGYWirVS4IpqeZwvd32kZQ9r2YYsrMa0Tg7+A==)
+    username: ENC(E3X+YVg3OGUlanxyEr1oxsTxhfIytU2S)
+    password: ENC(PrfDuc2GADVS7iDBiQP171uUYe1fyfFC)
   jpa:
     hibernate:
       ddl-auto: create
@@ -18,21 +19,21 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: ENC(PuUyduub8CcHkWuV2S4M+caPFpNHpeYvLe0g6QQ/aejfUKR8O1aurKsEce1JmOAw5vbDyhZrmUrG/DsjyKEyEkqdVjpwh0TfckosdjeWz2xXp+kb3u2W5A==)
+            client-secret: ENC(uwbo7wPKRhAfaO27WtX12K9CoYoGx8VDqorHZ0FR6TUSECwm3BSiOjY65VQBkPiY)
             scope: profile, email
             redirect-uri: "http://localhost:8080/login/oauth2/code/google"
           naver:
-            client-id: ${NAVER_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-id: ENC(W+NdnBnyApQx9H5+WdFjqaVBIV8bMFCe+ayebQoFnWA=)
+            client-secret: ENC(mg4vLRzJkhEof9h5ddhe1X5RWVxeE6qs)
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: name, email, nickname
             redirect-uri: "http://localhost:8080/login/oauth2/code/naver"
             client-name: naver
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
+            client-id: ENC(PEzANOvS2lchMDjVqQhLbb3HbyDu8pJYrriNSjNRJNWX/Q8cLKmlAHHLJowuM+1p)
+            client-secret: ENC(IM4E35MWymwZAEEZPpdLS2t2E+RxAeyiDrI+yuNpo0W5g+0mEbjVZ8zWyHAQ2FmB)
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image
@@ -54,3 +55,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+
+jasypt:
+  encryptor:
+    property:
+      bean: jasyptStringEncryptor
+    password: ${SECRET_KEY}
+

@@ -1,16 +1,23 @@
 package com.zerobase.user.entity;
 
 import com.zerobase.common.entity.BaseEntity;
+import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
 import com.zerobase.user.enums.Provider;
 import com.zerobase.user.enums.Role;
+import com.zerobase.user.util.AESUtil;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(name = "member")
 @Getter
@@ -19,11 +26,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @AuditOverride(forClass = BaseEntity.class)
-public class MemberEntity extends BaseEntity {
+public class MemberEntity extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String loginId;
+    private String username;
     private String password;
     private String email;
     private String phoneNumber;
@@ -49,7 +56,7 @@ public class MemberEntity extends BaseEntity {
 
     @Builder
     MemberEntity(
-            String loginId,
+            String username,
             String password,
             String email,
             String nickName,
@@ -64,7 +71,7 @@ public class MemberEntity extends BaseEntity {
             MemberLevel level,
             List<Role> roles
     ) {
-        this.loginId = loginId;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.nickName = nickName;
@@ -78,5 +85,49 @@ public class MemberEntity extends BaseEntity {
         this.providerId = providerId;
         this.level = level;
         this.roles = roles != null ? roles : List.of(Role.USER);
+    }
+
+    public MemberDto toDto(AESUtil aesUtil) throws Exception {
+        return MemberDto.builder()
+                .username(this.username)
+                .email(this.email)
+                .phoneNumber(aesUtil.decrypt(this.phoneNumber))
+                .nickName(this.nickName)
+                .name(this.name)
+                .birth(this.birth)
+                .job(this.job)
+                .interests(this.interests)
+                .gender(this.gender)
+                .points(this.points)
+                .level(this.level)
+                .roles(this.roles)
+                .build();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 }

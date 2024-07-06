@@ -1,10 +1,12 @@
 package com.zerobase.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.entity.MemberEntity;
 import com.zerobase.user.enums.Role;
 import com.zerobase.user.service.MemberService;
+import com.zerobase.user.util.AESUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -40,10 +42,13 @@ class MemberControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private AESUtil aesUtil;
+
     @Test
     void registerUser_ValidInput_ShouldReturnOk() throws Exception {
         RegisterForm registerForm = RegisterForm.builder()
-                .loginId("testUser")
+                .username("testUser")
                 .password("Test@1234")
                 .email("test@example.com")
                 .phoneNumber("01012345678")
@@ -53,7 +58,7 @@ class MemberControllerTest {
                 .build();
 
         MemberEntity memberEntity = MemberEntity.builder()
-                .loginId(registerForm.getLoginId())
+                .loginId(registerForm.getUsername())
                 .password(registerForm.getPassword())
                 .email(registerForm.getEmail())
                 .phoneNumber(registerForm.getPhoneNumber())
@@ -65,14 +70,16 @@ class MemberControllerTest {
                 .gender(registerForm.getGender())
                 .roles(List.of(Role.USER))
                 .build();;
-        when(memberService.registerUser(any(RegisterForm.class))).thenReturn(memberEntity);
 
-        mockMvc.perform(post("/register")
+        MemberDto memberDto = memberEntity.toDto(aesUtil);
+        when(memberService.registerUser(any(RegisterForm.class))).thenReturn(memberDto);
+
+        mockMvc.perform(post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerForm))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.loginId").value(registerForm.getLoginId()))
+                .andExpect(jsonPath("$.loginId").value(registerForm.getUsername()))
                 .andExpect(jsonPath("$.password").value(registerForm.getPassword()))
                 .andExpect(jsonPath("$.email").value(registerForm.getEmail()))
                 .andExpect(jsonPath("$.phoneNumber").value(registerForm.getPhoneNumber()))
@@ -88,7 +95,7 @@ class MemberControllerTest {
     @Test
     void registerUser_InvalidInput_ShouldReturnBadRequest() throws Exception {
         RegisterForm registerForm = RegisterForm.builder()
-                .loginId("")  // Invalid loginId
+                .username("")  // Invalid loginId
                 .password("short")
                 .email("invalid-email")
                 .phoneNumber("invalid-phone")
@@ -107,7 +114,7 @@ class MemberControllerTest {
     @Test
     void registerUser_InvalidPassword_ShouldReturnBadRequest() throws Exception {
         RegisterForm registerForm = RegisterForm.builder()
-                .loginId("LoginTest1234")  // Invalid loginId
+                .username("LoginTest1234")  // Invalid loginId
                 .password("short")
                 .email("invalid-email")
                 .phoneNumber("invalid-phone")
@@ -126,7 +133,7 @@ class MemberControllerTest {
     @Test
     void registerUser_InvalidEmail_ShouldReturnBadRequest() throws Exception {
         RegisterForm registerForm = RegisterForm.builder()
-                .loginId("LoginTest1234")  // Invalid loginId
+                .username("LoginTest1234")  // Invalid loginId
                 .password("Test1234!@")
                 .email("invalid-email")
                 .phoneNumber("invalid-phone")
@@ -145,7 +152,7 @@ class MemberControllerTest {
     @Test
     void registerUser_InvalidPhone_ShouldReturnBadRequest() throws Exception {
         RegisterForm registerForm = RegisterForm.builder()
-                .loginId("LoginTest1234")  // Invalid loginId
+                .username("LoginTest1234")  // Invalid loginId
                 .password("Test1234!@")
                 .email("test@example.com")
                 .phoneNumber("invalid-phone")

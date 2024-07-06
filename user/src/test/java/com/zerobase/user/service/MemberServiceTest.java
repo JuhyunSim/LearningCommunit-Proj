@@ -1,5 +1,6 @@
 package com.zerobase.user.service;
 
+import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.entity.MemberEntity;
 import com.zerobase.user.enums.Gender;
@@ -37,7 +38,7 @@ class MemberServiceTest {
     @Test
     void testRegisterUser_Success() throws Exception {
         RegisterForm form = RegisterForm.builder()
-                .loginId("testuser")
+                .username("testuser")
                 .password("Test@1234")
                 .email("test@example.com")
                 .phoneNumber("1234567890")
@@ -49,35 +50,36 @@ class MemberServiceTest {
                 .gender(Gender.MALE)
                 .build();
 
-        when(memberRepository.existsByLoginId(form.getLoginId())).thenReturn(false);
+        when(memberRepository.existsByUsername(form.getUsername())).thenReturn(false);
         when(memberRepository.existsByEmail(form.getEmail())).thenReturn(false);
         when(aesUtil.encrypt(form.getPhoneNumber())).thenReturn("encryptedPhoneNumber");
         when(memberRepository.existsByPhoneNumber("encryptedPhoneNumber")).thenReturn(false);
 
         MemberEntity savedMember = form.toEntity(passwordEncoder, aesUtil);
+        MemberDto memberDto = savedMember.toDto(aesUtil);
         when(memberRepository.save(any())).thenReturn(savedMember);
+        when(aesUtil.decrypt("encryptedPhoneNumber")).thenReturn("1234567890");
 
         //when
-        MemberEntity result = memberService.registerUser(form);
+        MemberDto result = memberService.registerUser(form);
 
         //then
         assertNotNull(result);
-        assertEquals(form.getLoginId(), result.getLoginId());
+        assertEquals(form.getUsername(), result.getUsername());
         assertEquals(form.getEmail(), result.getEmail());
-        assertEquals("encryptedPhoneNumber", result.getPhoneNumber());
+        assertEquals("1234567890", result.getPhoneNumber());
         assertEquals("testnick", result.getNickName());
         assertEquals(Gender.MALE, result.getGender());
         assertEquals("Coding", result.getInterests());
         assertEquals(LocalDate.of(1990, 1, 1), result.getBirth());
         assertEquals("Developer", result.getJob());
-        assertEquals(passwordEncoder.encode("Test@1234"), result.getPassword());
     }
 
     @Test
     void testRegisterUser_DuplicateLoginId() {
         //then
         RegisterForm form = RegisterForm.builder()
-                .loginId("testuser")
+                .username("testuser")
                 .password("Test@1234")
                 .email("test@example.com")
                 .phoneNumber("1234567890")
@@ -89,7 +91,7 @@ class MemberServiceTest {
                 .gender(Gender.MALE)
                 .build();
 
-        when(memberRepository.existsByLoginId(form.getLoginId())).thenReturn(true);
+        when(memberRepository.existsByUsername(form.getUsername())).thenReturn(true);
         //when
         Exception exception = assertThrows(CustomException.class, () -> {
             memberService.registerUser(form);
@@ -104,7 +106,7 @@ class MemberServiceTest {
     void testRegisterUser_DuplicateEmail() {
         //then
         RegisterForm form = RegisterForm.builder()
-                .loginId("testuser")
+                .username("testuser")
                 .password("Test@1234")
                 .email("test@example.com")
                 .phoneNumber("1234567890")
@@ -131,7 +133,7 @@ class MemberServiceTest {
     void testRegisterUser_DuplicatePhoneNumber() throws Exception {
         //then
         RegisterForm form = RegisterForm.builder()
-                .loginId("testuser")
+                .username("testuser")
                 .password("Test@1234")
                 .email("test@example.com")
                 .phoneNumber("1234567890")

@@ -52,11 +52,24 @@ public class MemberService {
                         () -> new CustomException(ErrorCode.NOT_FOUND_USER)
                 );
 
-        memberEntity.setNickName(updateMemberForm.getNickName());
-        memberEntity.setName(updateMemberForm.getName());
-        memberEntity.setJob(updateMemberForm.getJob());
-        memberEntity.setInterests(updateMemberForm.getInterests());
-        memberEntity.setGender(updateMemberForm.getGender());
+        MemberEntity updatedMemberEntity = MemberEntity.builder()
+                .id(memberEntity.getId())
+                .username(memberEntity.getUsername())
+                .password(memberEntity.getPassword())
+                .email(memberEntity.getEmail())
+                .phoneNumber(memberEntity.getPhoneNumber())
+                .nickName(updateMemberForm.getNickName())
+                .name(updateMemberForm.getName())
+                .birth(memberEntity.getBirth())
+                .job(updateMemberForm.getJob())
+                .interests(updateMemberForm.getInterests())
+                .gender(updateMemberForm.getGender())
+                .level(memberEntity.getLevel())
+                .roles(memberEntity.getRoles())
+                .provider(memberEntity.getProvider())
+                .providerId(memberEntity.getProviderId())
+                .points(memberEntity.getPoints())
+                .build();
 
         return memberRepository.save(memberEntity).toDto(aesUtil);
     }

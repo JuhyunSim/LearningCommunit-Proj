@@ -59,30 +59,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 사용자 정보 저장 또는 업데이트
         Optional<MemberEntity> memberOptional =
                 memberRepository.findByProviderAndProviderId(provider, providerId);
-        MemberEntity memberEntity;
-        if (memberOptional.isEmpty()) {
-            memberEntity = MemberEntity.builder()
-                    .provider(provider)
-                    .providerId(providerId)
-                    .name(name)
-                    .level(MemberLevel.BEGINNER)
-                    .points(0L)
-                    .build();
-
-            memberRepository.save(memberEntity);
-            log.info("New MemberEntity saved: name {}",
-                    memberEntity.getName());
-        } else {
-            memberEntity = memberOptional.get();
-            log.info("Existing MemberEntity found: name {}",
-                    memberEntity.getName());
-        }
+        MemberEntity memberEntity =
+                memberOptional.map(existingMember -> {
+                    log.info("Existing MemberEntity found: name {}", existingMember.getName());
+                    return existingMember;
+                }).orElseGet(() -> {MemberEntity newMember = MemberEntity.builder()
+                        .provider(provider)
+                        .providerId(providerId)
+                        .name(name)
+                        .level(MemberLevel.BEGINNER)
+                        .points(0L)
+                        .build();
+                    memberRepository.save(newMember);
+                    log.info("New MemberEntity saved: name {}", newMember.getName());
+                    return newMember;
+                });
 
         List<GrantedAuthority> authorities =
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-
-        String token =
-                jwtUtil.generateToken(memberEntity.getUsername(), authorities);
 
         return new DefaultOAuth2User(
                 authorities,

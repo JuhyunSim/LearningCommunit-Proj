@@ -3,12 +3,12 @@ GET http://localhost:8080/csrf-token
 Content-Type: application/json
 
 ###회원가입
-POST http://localhost:8080/register
+POST http://localhost:8080/users/register
 Content-Type: application/json
-X-CSRF-TOKEN: eRiNWqUn1OmYtK4QGaluaC8hnZkhPwUc09-XFfupehYsdY4RTCy7aJNB4NC10pYjf4RaWk0WsPsUCGcxsbqkJpnMHHUdR7py
+X-CSRF-TOKEN: RL2BjwAYCWBH5Aq9RIhhM3DZ-Orh40ABsmrK7BfQkUmgZAMgJo_ivjd5PVZq0DmNc6VVVUfp1YuE2iQs11L71Sfn83uTVDJC
 
 {
-  "loginId": "testUser",
+  "username": "testUser",
   "password": "Test@1234",
   "email": "test@example.com",
   "phoneNumber": "01012345678",
@@ -19,3 +19,35 @@ X-CSRF-TOKEN: eRiNWqUn1OmYtK4QGaluaC8hnZkhPwUc09-XFfupehYsdY4RTCy7aJNB4NC10pYjf4
   "interests": "개발",
   "gender": "MALE"
 }
+
+### 자체 서비스 로그인
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "testUser",
+  "password": "Test@1234"
+}
+
+### 나의 정보 조회
+GET http://localhost:8080/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNjQ5ODQsImV4cCI6MTcyMDQwMDk4NH0.3x0MpxrY2QjoygxFsgfDLPGXER9B2EKeKJ7srvoHKeo
+
+### 정보 수정
+PUT http://localhost:8080/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNjQ5ODQsImV4cCI6MTcyMDQwMDk4NH0.3x0MpxrY2QjoygxFsgfDLPGXER9B2EKeKJ7srvoHKeo
+
+{
+  "nickName": "TestNick-update",
+  "name": "Test Name-update",
+  "job": "학생",
+  "interests": "백엔드 개발",
+  "gender": "MALE"
+}
+
+### 회원 탈퇴
+DELETE http://localhost:8080/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNTQ4OTksImV4cCI6MTcyMDM5MDg5OX0.r4TFfW9PHg1SgLojgb3EtTePEnudBLQyscU2xQW4w2A

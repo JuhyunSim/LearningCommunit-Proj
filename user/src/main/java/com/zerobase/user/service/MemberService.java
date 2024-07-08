@@ -9,12 +9,14 @@ import com.zerobase.user.exception.ErrorCode;
 import com.zerobase.user.repository.MemberRepository;
 import com.zerobase.user.util.AESUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,10 +35,11 @@ public class MemberService {
 
     //나의 정보 조회
     @Transactional
-    public MemberDto getMyInfo(String loginId) throws Exception {
-        MemberEntity memberEntity = memberRepository.findByUsername(loginId).orElseThrow(
+    public MemberDto getMyInfo(String username) throws Exception {
+        MemberEntity memberEntity = memberRepository.findByUsername(username).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
         );
+        log.debug("memberEntity: {}", memberEntity);
         return memberEntity.toDto(aesUtil);
     }
 
@@ -64,8 +67,8 @@ public class MemberService {
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER)
         );
         memberRepository.delete(memberEntity);
-
     }
+
     private void validateRegisterForm(RegisterForm registerForm) throws Exception {
         // 로그인 ID 중복 체크
         if(memberRepository.existsByUsername(registerForm.getUsername())) {

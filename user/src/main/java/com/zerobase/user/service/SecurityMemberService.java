@@ -5,6 +5,7 @@ import com.zerobase.user.exception.CustomException;
 import com.zerobase.user.exception.ErrorCode;
 import com.zerobase.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,13 +19,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+@Slf4j
+public class SecurityMemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        MemberEntity memberEntity = memberRepository.findByLoginId(username)
+        log.debug("Load user by username: {}", username);
+        MemberEntity memberEntity = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER)
                 );
 
@@ -33,9 +36,10 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
 
         return User.builder()
-                .username(memberEntity.getLoginId())
+                .username(memberEntity.getUsername())
                 .password(memberEntity.getPassword())
                 .authorities(authorities)
                 .build();
     }
 }
+

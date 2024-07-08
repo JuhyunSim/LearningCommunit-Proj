@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class EncryptConfig {
 
     @Bean
-    public AESUtil aesUtil() throws Exception {
+    public AESUtil aesUtil() throws Exception{
         return new AESUtil();
     }
 

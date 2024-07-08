@@ -58,10 +58,10 @@ class MemberControllerTest {
                 .build();
 
         MemberEntity memberEntity = MemberEntity.builder()
-                .loginId(registerForm.getUsername())
+                .username(registerForm.getUsername())
                 .password(registerForm.getPassword())
                 .email(registerForm.getEmail())
-                .phoneNumber(registerForm.getPhoneNumber())
+                .phoneNumber(aesUtil.encrypt(registerForm.getPhoneNumber()))
                 .nickName(registerForm.getNickName())
                 .name(registerForm.getName())
                 .birth(registerForm.getBirth())
@@ -79,8 +79,7 @@ class MemberControllerTest {
                         .content(objectMapper.writeValueAsString(registerForm))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.loginId").value(registerForm.getUsername()))
-                .andExpect(jsonPath("$.password").value(registerForm.getPassword()))
+                .andExpect(jsonPath("$.username").value(registerForm.getUsername()))
                 .andExpect(jsonPath("$.email").value(registerForm.getEmail()))
                 .andExpect(jsonPath("$.phoneNumber").value(registerForm.getPhoneNumber()))
                 .andExpect(jsonPath("$.nickName").value(registerForm.getNickName()))

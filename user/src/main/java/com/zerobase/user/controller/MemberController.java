@@ -31,8 +31,8 @@ public class MemberController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<MemberDto> myInfo(@RequestHeader("Authorization") String token) throws Exception {
-        String loginId = jwtUtil.extractUsername(token.substring(7));
-        MemberDto myInfo = memberService.getMyInfo(loginId);
+        String username = jwtUtil.extractUsername(token.substring(7));
+        MemberDto myInfo = memberService.getMyInfo(username);
         return ResponseEntity.ok(myInfo);
     }
 
@@ -40,7 +40,7 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<MemberDto> updateMyInfo(
             @RequestHeader("Authorization") String token,
-            @RequestBody UpdateMemberForm updateMemberForm) throws Exception {
+            @RequestBody @Valid UpdateMemberForm updateMemberForm) throws Exception {
         String loginId = jwtUtil.extractUsername(token.substring(7));
         MemberDto updatedMember =
                 memberService.updateMyInfo(loginId, updateMemberForm);
@@ -49,7 +49,9 @@ public class MemberController {
 
     @DeleteMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteAccount(@RequestHeader("Authorization") String token) throws Exception {
+    public ResponseEntity<Void> deleteAccount(
+            @RequestHeader("Authorization") String token
+    ) throws Exception {
         String loginId = jwtUtil.extractUsername(token.substring(7));
         memberService.deleteAccount(loginId);
         log.info(loginId + "님이 회원탈퇴하였습니다.");

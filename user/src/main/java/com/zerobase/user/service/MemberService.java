@@ -71,7 +71,7 @@ public class MemberService {
                 .points(memberEntity.getPoints())
                 .build();
 
-        return memberRepository.save(memberEntity).toDto(aesUtil);
+        return memberRepository.save(updatedMemberEntity).toDto(aesUtil);
     }
 
     @Transactional

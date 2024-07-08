@@ -25,23 +25,24 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/login/**",
-                                "/error/**")
+                                "/register/**",
+                                "/csrf-token/**")
                         .permitAll()
                         .requestMatchers("/user").hasRole("USER")
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                        .userInfoEndpoint(userInfo -> userInfo
-                        .userService(customOAuth2UserService))
-                        .successHandler((request, response, authentication) -> {
-                            log.info("Login successful: {}", authentication.getPrincipal());
-                            response.sendRedirect("/home");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            log.error("Login failed", exception);
-                            response.sendRedirect("/error");
-                        }))
+                                .userInfoEndpoint(userInfo -> userInfo
+                                        .userService(customOAuth2UserService))
+                                .successHandler((request, response, authentication) -> {
+                                    log.info("Login successful: {}", authentication.getPrincipal());
+                                    response.sendRedirect("/home");
+                                })
+                                .failureHandler((request, response, exception) -> {
+                                    log.error("Login failed", exception);
+                                    response.sendRedirect("/error");
+                                }))
                 .logout(logout -> logout
                         .logoutSuccessHandler((request, response, authentication) -> {
                             log.info("Logout successful");

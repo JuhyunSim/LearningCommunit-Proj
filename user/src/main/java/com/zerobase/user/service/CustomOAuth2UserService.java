@@ -5,9 +5,11 @@ import com.zerobase.user.enums.MemberLevel;
 import com.zerobase.user.enums.Provider;
 import com.zerobase.user.repository.MemberRepository;
 import com.zerobase.user.security.SocialUserInfo;
+import com.zerobase.user.util.JwtUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,6 +19,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -26,6 +29,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final HttpSession httpSession;
     private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -55,8 +59,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 사용자 정보 저장 또는 업데이트
         Optional<MemberEntity> memberOptional =
                 memberRepository.findByProviderAndProviderId(provider, providerId);
+        MemberEntity memberEntity;
         if (memberOptional.isEmpty()) {
-            MemberEntity memberEntity = MemberEntity.builder()
+            memberEntity = MemberEntity.builder()
                     .provider(provider)
                     .providerId(providerId)
                     .name(name)
@@ -68,13 +73,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.info("New MemberEntity saved: name {}",
                     memberEntity.getName());
         } else {
+            memberEntity = memberOptional.get();
             log.info("Existing MemberEntity found: name {}",
-                    memberOptional.get().getName());
+                    memberEntity.getName());
         }
 
+        List<GrantedAuthority> authorities =
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        String token =
+                jwtUtil.generateToken(memberEntity.getUsername(), authorities);
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                authorities,
                 oAuth2User.getAttributes(),
                 provider.getUserNameAttribute()  //provider에 따라 다른 식별값 사용
         );

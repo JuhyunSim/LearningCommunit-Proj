@@ -21,7 +21,7 @@ public class RegisterForm {
     //15자 제한 - 영문+숫자 허용
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]{6,20}$")
-    private String loginId;
+    private String username;
     //영문+숫자+특수문자 포함, 8~20자
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,20}$")
@@ -53,7 +53,7 @@ public class RegisterForm {
     public MemberEntity toEntity(PasswordEncoder passwordEncoder, AESUtil aesUtil)
             throws Exception {
         return MemberEntity.builder()
-                .loginId(loginId)
+                .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .phoneNumber(aesUtil.encrypt(phoneNumber))

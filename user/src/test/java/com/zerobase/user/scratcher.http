@@ -32,16 +32,17 @@ Content-Type: application/json
 ### 나의 정보 조회
 GET http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNjQ5ODQsImV4cCI6MTcyMDQwMDk4NH0.3x0MpxrY2QjoygxFsgfDLPGXER9B2EKeKJ7srvoHKeo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1MTM1MDMsImV4cCI6MTcyMDUxNDQwM30.ndsVHD55qWTvJCLMlb2dEuTQOHI4kTUvYdUfwqH84v0
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNTEzNTAzLCJleHAiOjE3MjExMTgzMDN9.6nrzQFZz-CmhZxErnGKCnBiUytBGkVJbx2YgMnuId3M
 
 ### 정보 수정
 PUT http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNjQ5ODQsImV4cCI6MTcyMDQwMDk4NH0.3x0MpxrY2QjoygxFsgfDLPGXER9B2EKeKJ7srvoHKeo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1MDkzMjEsImV4cCI6MTcyMDUxMDIyMX0.XOt_gLGBwE4b8eVbKGerJHXKlieJ_T567PDwcm2CxOk
 
 {
-  "nickName": "TestNick-update",
-  "name": "Test Name-update",
+  "nickName": "Test-update",
+  "name": "Test-update",
   "job": "학생",
   "interests": "백엔드 개발",
   "gender": "MALE"
@@ -51,3 +52,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiX
 DELETE http://localhost:8080/users/me
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNTQ4OTksImV4cCI6MTcyMDM5MDg5OX0.r4TFfW9PHg1SgLojgb3EtTePEnudBLQyscU2xQW4w2A
+
+### 토큰 재발급
+POST http://localhost:8080/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1ODk2ODMsImV4cCI6MTcyMDU5MTQ4M30.fUXa_XrqWPiRuM5b-xTxgJlx5aC0441ffbS7jNgffK4
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNTg5NjgzLCJleHAiOjE3MjExOTQ0ODN9.GmoGHK8iXexHluxEbyhvWuVrTKfKxGTliP46WyS9kjc
+
+
+### 로그아웃
+POST http://localhost:8080/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1OTE1NjgsImV4cCI6MTcyMDU5MzM2OH0.Y_jxvuMZbk6YUhQtkyiQtgobuqbjiDPn3-X5DPmABcI
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNTkxNTY4LCJleHAiOjE3MjExOTYzNjh9.PgnWNKSwKfJyA7rU94EHQTPF6uyvWr23Gr3MGZX1liE
+

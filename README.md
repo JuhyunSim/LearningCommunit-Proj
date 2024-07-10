@@ -76,6 +76,13 @@
 - 목표 기간 (ex 6개월): 년, 개월 단위로 입력 (년 : 1 ~ 4, 개월 : 1 ~ 12) * 필수
 - 기타 설명(동기, 다짐, 계획 등): 0 ~ 1000자
   
+<< 엔드포인트 >>
+  - POST /challenges
+  - GET /challenges
+  - GET /challenges/{id}
+  - PUT /challenges/{id}
+  - DELETE /challenges/{id}
+
 [챌린지 일지 작성] (일지는 챌린지의 하위 항목)
 - 제목: 1 ~ 100자
 - 날짜: 작성날짜
@@ -86,13 +93,7 @@
 - 학습내용 인증(사진 or 영상 모두 가능)
 - 비공개 / 공개 설정 
 
-<< 엔드포인트 >>
-  - POST /challenges
-  - GET /challenges
-  - GET /challenges/{id}
-  - PUT /challenges/{id}
-  - DELETE /challenges/{id}
-**파일 업로드(이미지 / 영상)
+** 추가 기능: 파일 업로드(이미지 / 영상)
   - POST /files/upload
   - GET /files/{filename}
 

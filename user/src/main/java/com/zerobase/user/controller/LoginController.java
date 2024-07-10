@@ -27,7 +27,7 @@ public class LoginController {
         return ResponseEntity.ok(principal.getAttributes());
     }
 
-    @PostMapping("/login")
+    @PostMapping("users/login")
     public ResponseEntity<JwtResponse> login(
             @RequestBody LoginForm loginForm
     ) throws Exception {
@@ -35,7 +35,7 @@ public class LoginController {
         return ResponseEntity.ok(authService.authenticate(loginForm));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/users/refresh")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JwtResponse> refreshToken(
             @RequestHeader(name = "Authorization") String accessToken,

@@ -34,20 +34,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain chain
     ) throws ServletException, IOException {
-        String accessJtw = resolveToken(request, ACCESS_TOKEN_HEADER);
-        String refreshJtw = resolveToken(request, REFRESH_TOKEN_HEADER);
-        if (accessJtw != null &&
-                jwtUtil.validateToken(jwtUtil.extractUsername(accessJtw), accessJtw)) {
-            if (refreshJtw != null && !blackList.isListed(refreshJtw)) {
-                Authentication authentication = jwtUtil.getAuthentication(accessJtw);
+        String accessJwt = resolveToken(request, ACCESS_TOKEN_HEADER);
+        String refreshJwt = resolveToken(request, REFRESH_TOKEN_HEADER);
+        if (accessJwt != null &&
+                jwtUtil.validateToken(jwtUtil.extractUsername(accessJwt), accessJwt)) {
+            if (refreshJwt != null && !blackList.isListed(refreshJwt)) {
+                Authentication authentication = jwtUtil.getAuthentication(accessJwt);
                 log.info("Filtering request token Authentication: {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info(String.format("[%s] -> %s ",
-                        jwtUtil.extractUsername(accessJtw), request.getRequestURI())
+                        jwtUtil.extractUsername(accessJwt), request.getRequestURI())
                 );
             }
         }
-        log.info("Filtering request token: {}", accessJtw);
+        log.info("Filtering request token: {}", accessJwt);
         log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication());
         chain.doFilter(request, response);
     }

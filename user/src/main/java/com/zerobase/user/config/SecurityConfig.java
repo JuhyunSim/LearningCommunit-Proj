@@ -46,14 +46,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/",
-                                "/login",
-                                "/login/**",
+                                "users/login/**",
                                 "/users/register/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/csrf-token")
                         .permitAll()
-                        .requestMatchers("/users/**", "refresh/**").hasRole("USER")
+                        .requestMatchers("/users/**", "/users/refresh/**").hasRole("USER")
                         .requestMatchers("/logout").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)

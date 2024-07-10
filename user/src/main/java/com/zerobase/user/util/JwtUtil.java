@@ -89,21 +89,19 @@ public class JwtUtil {
 
         List<Role> roles = extractRoles(jwt);
 
-        UserDetails userDetails = null;
-        if (roles.contains(Role.ADMIN)) {
-            userDetails =
-                    this.securityAdminService.loadUserByUsername(
-                            this.extractUsername(jwt).trim()
-                    );
-        } else {
-            //usertype == USER
-            userDetails =
-                    this.securityMemberService.loadUserByUsername(
-                            this.extractUsername(jwt).trim()
-                    );
-        }
+        UserDetails userDetails = getUserDetails(jwt, roles);
 
         return new UsernamePasswordAuthenticationToken(userDetails,
                 "", userDetails.getAuthorities());
+    }
+
+    private UserDetails getUserDetails(String jwt, List<Role> roles) {
+        String username = this.extractUsername(jwt).trim();
+        if (roles.contains(Role.ADMIN)) {
+            return this.securityAdminService.loadUserByUsername(username);
+        } else if (roles.contains(Role.USER)) {
+            return this.securityMemberService.loadUserByUsername(username);
+        }
+        return null;
     }
 }

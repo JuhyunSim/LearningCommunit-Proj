@@ -20,6 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.jsonwebtoken.Jwts.SIG.HS256;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +31,8 @@ public class JwtUtil {
     private SecretKey SECRET_KEY;
     private final SecurityAdminService securityAdminService;
     private final SecurityMemberService securityMemberService;
+    private final Long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 7; //7일
+    private final Long ACCESS_TOKEN_EXPIRATION = 1000L * 60 * 30; //30분
 
     @PostConstruct
     public void init() {
@@ -37,6 +41,14 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, List<GrantedAuthority> authorities) {
+        return createToken(username, authorities, ACCESS_TOKEN_EXPIRATION);
+    }
+
+    public String generateRefreshToken(String username) {
+        return createToken(username, Collections.emptyList(), REFRESH_TOKEN_EXPIRATION); // 7 days
+    }
+
+    private String createToken(String username, List<GrantedAuthority> authorities, long expirationTime) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(
                 "authorities",
@@ -44,20 +56,18 @@ public class JwtUtil {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList())
         );
-        return createToken(claims, username);
-    }
-
-    private String createToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-                .signWith(SECRET_KEY)
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SECRET_KEY, HS256)
                 .compact();
     }
 
-    private Claims extractAllClaims(String token) {
+
+    public Claims extractAllClaims(String token) {
+        log.debug("token: {}", token);
         return Jwts.parser()
                 .verifyWith(SECRET_KEY)
                 .build()
@@ -65,7 +75,7 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
@@ -80,8 +90,8 @@ public class JwtUtil {
                 .collect(Collectors.toList());
     }
 
-    public boolean validateToken(String token, String username) {
-        return (extractUsername(token).equals(username) && !isTokenExpired(token));
+    public boolean validateToken(String username, String token) {
+        return (extractUsername(token).equals(username) && !isTokenExpired(token)) ;
     }
 
     public Authentication getAuthentication(String jwt) {

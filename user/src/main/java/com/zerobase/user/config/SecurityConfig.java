@@ -1,8 +1,8 @@
-
-
 package com.zerobase.user.config;
 
+import com.zerobase.user.service.BlackList;
 import com.zerobase.user.service.CustomOAuth2UserService;
+import com.zerobase.user.service.LogoutService;
 import com.zerobase.user.service.SecurityMemberService;
 import com.zerobase.user.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +33,12 @@ public class SecurityConfig {
     private final SecurityMemberService securityMemberService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final LogoutService logoutService;
+    private final BlackList blackList;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(userDetailsService(), jwtUtil);
+        return new JwtAuthenticationFilter(jwtUtil, blackList);
     }
 
     @Bean
@@ -44,14 +46,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/",
-                                "/login",
-                                "/login/**",
+                                "users/login/**",
                                 "/users/register/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/csrf-token")
                         .permitAll()
-                        .requestMatchers("/users/**").hasRole("USER")
+                        .requestMatchers("/users/**", "/users/refresh/**").hasRole("USER")
+                        .requestMatchers("/logout").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
@@ -70,24 +72,27 @@ public class SecurityConfig {
                                     List<GrantedAuthority> authorities =
                                             new ArrayList<>(authentication.getAuthorities());
                                     log.debug("authorities: {}", authorities);
-                                    String token =
+                                    String accessJwt =
                                             jwtUtil.generateToken(authentication.getName(), authorities);
-                                    log.debug("token: {}", token);
+                                    String refreshToken =
+                                            jwtUtil.generateRefreshToken(authentication.getName());
+
+                                    log.debug("token: {}", accessJwt);
+                                    log.debug("refreshToken: {}", refreshToken);
                                     response.setContentType("application/json");
                                     response.setCharacterEncoding("UTF-8");
-                                    response.getWriter().write("{\"token\": \"" + token + "\"}");
+                                    response.getWriter().write(
+                                            "{\"accessToken\": \""
+                                                    + accessJwt
+                                                    + "\", \"refreshToken\": \""
+                                                    + refreshToken + "\"}");
                                 })
                                 .failureHandler((request, response, exception) -> {
                                     log.error("Login failed", exception);
                                     response.sendRedirect("/error");
                                 }))
-                .logout(logout -> logout
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            log.info("Logout successful");
-                            response.sendRedirect("/login");
-                        })
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"));
+                .logout(AbstractHttpConfigurer::disable);
+
         return http.build();
     }
 

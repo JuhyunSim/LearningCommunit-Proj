@@ -4,7 +4,7 @@ import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.dto.UpdateMemberForm;
 import com.zerobase.user.service.MemberService;
-import com.zerobase.user.util.JwtUtil;
+import com.zerobase.common.util.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,10 @@
 package com.zerobase.user.entity;
 
-import com.zerobase.common.entity.BaseEntity;
 import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
-import com.zerobase.user.enums.Provider;
-import com.zerobase.user.enums.Role;
+import com.zerobase.common.enums.Provider;
+import com.zerobase.common.enums.Role;
 import com.zerobase.user.util.AESUtil;
 import jakarta.persistence.*;
 import lombok.*;
@@ -84,7 +83,7 @@ public class MemberEntity extends BaseEntity implements UserDetails {
         this.provider = provider;
         this.providerId = providerId;
         this.level = level;
-        this.roles = roles != null ? roles : List.of(Role.USER);
+        this.roles = roles != null ? roles : List.of(Role.ROLE_USER);
     }
 
     public MemberDto toDto(AESUtil aesUtil) throws Exception {

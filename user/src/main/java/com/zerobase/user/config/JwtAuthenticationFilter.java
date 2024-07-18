@@ -1,7 +1,7 @@
 package com.zerobase.user.config;
 
-import com.zerobase.user.service.BlackList;
-import com.zerobase.user.util.JwtUtil;
+import com.zerobase.common.service.BlackList;
+import com.zerobase.common.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String accessJwt = resolveToken(request, ACCESS_TOKEN_HEADER);
         String refreshJwt = resolveToken(request, REFRESH_TOKEN_HEADER);
+        log.debug("request paht: {}", request.getRequestURI());
         if (accessJwt != null &&
                 jwtUtil.validateToken(jwtUtil.extractUsername(accessJwt), accessJwt)) {
             if (refreshJwt != null && !blackList.isListed(refreshJwt)) {

@@ -1,33 +1,29 @@
 package com.zerobase.user.controller;
 
-import com.zerobase.user.dto.JwtResponse;
+import com.zerobase.common.dto.JwtResponse;
+import com.zerobase.common.dto.OAuth2UserDto;
+import com.zerobase.common.util.JwtUtil;
 import com.zerobase.user.dto.LoginForm;
 import com.zerobase.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class LoginController {
     private final AuthService authService;
+    private final JwtUtil jwtUtil;
+//    private final CustomOAuth2UserService customOAuth2UserService;
 
-    //로그인 성공 후 반환
-    @GetMapping("/home")
-    public ResponseEntity<Map<String, Object>> home(
-            @AuthenticationPrincipal OAuth2User principal
-    ) {
-        return ResponseEntity.ok(principal.getAttributes());
-    }
-
-    @PostMapping("users/login")
+    @PostMapping("/users/login")
     public ResponseEntity<JwtResponse> login(
             @RequestBody LoginForm loginForm
     ) throws Exception {
@@ -44,6 +40,13 @@ public class LoginController {
         refreshToken = refreshToken.replace("Bearer ", "");
         accessToken = accessToken.replace("Bearer ", "");
         return ResponseEntity.ok(authService.refreshToken(accessToken, refreshToken));
+    }
+
+    @PostMapping("/users/oauth2")
+    public Mono<JwtResponse> getToken(
+            @RequestBody OAuth2UserDto oAuth2UserDto
+    ) {
+        return Mono.just(authService.oauthLogin(oAuth2UserDto));
     }
 
 }

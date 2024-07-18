@@ -1,7 +1,7 @@
 package com.zerobase.user.repository;
 
 import com.zerobase.user.entity.MemberEntity;
-import com.zerobase.user.enums.Provider;
+import com.zerobase.common.enums.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -3,7 +3,7 @@ package com.zerobase.user.dto;
 import com.zerobase.user.entity.MemberEntity;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
-import com.zerobase.user.enums.Role;
+import com.zerobase.common.enums.Role;
 import com.zerobase.user.util.AESUtil;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.zerobase.common.enums.Role.ROLE_USER;
 
 @Getter
 @Setter
@@ -67,7 +69,7 @@ public class RegisterForm {
                 .provider(null)  // 자체 로그인을 위한 Provider null
                 .providerId(null)          // 자체 로그인은 providerId null
                 .level(MemberLevel.BEGINNER) // 초기 회원 레벨 설정
-                .roles(List.of(Role.USER))
+                .roles(List.of(ROLE_USER))
                 .build();
     }
 }

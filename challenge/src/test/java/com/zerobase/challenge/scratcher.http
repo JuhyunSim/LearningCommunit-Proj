@@ -1,0 +1,15 @@
+### 챌린지 등록하기
+POST http://localhost:8082/challenges
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIyIiwiaWF0IjoxNzIwNzk3NTU4LCJleHAiOjE3MjA3OTkzNTh9.fEihtc6SqZHo5x12isdQcig9KN_-ucrHL-ECkahM720
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyMiIsImlhdCI6MTcyMDc5NzU1OCwiZXhwIjoxNzIxNDAyMzU4fQ.uVkh1w0x90h6P_j52DAuLYkB958-xJUa0NS8ED4X2E0
+
+{
+  "userId": 4,
+  "username": "testUser2",
+  "category": "LANGUAGE",
+  "goal": "영어 회화 마스터",
+  "startDate": "2024-08-01",
+  "dueDate": "2025-08-01",
+  "description": "description-test"
+}

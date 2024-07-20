@@ -3,7 +3,7 @@ package com.zerobase.user.dto;
 import com.zerobase.user.entity.MemberEntity;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
-import com.zerobase.common.enums.Role;
+import com.zerobase.user.enums.Role;
 import com.zerobase.user.util.AESUtil;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.zerobase.common.enums.Role.ROLE_USER;
+import static com.zerobase.user.enums.Role.ROLE_USER;
 
 @Getter
 @Setter

@@ -1,6 +1,5 @@
 package com.zerobase.user.service;
 
-import com.zerobase.common.service.BlackList;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

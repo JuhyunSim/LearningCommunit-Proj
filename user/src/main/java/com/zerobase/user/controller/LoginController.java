@@ -1,8 +1,8 @@
 package com.zerobase.user.controller;
 
-import com.zerobase.common.dto.JwtResponse;
-import com.zerobase.common.dto.OAuth2UserDto;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.dto.JwtResponse;
+import com.zerobase.user.dto.OAuth2UserDto;
+import com.zerobase.user.util.JwtUtil;
 import com.zerobase.user.dto.LoginForm;
 import com.zerobase.user.service.AuthService;
 import lombok.RequiredArgsConstructor;

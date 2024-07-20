@@ -32,6 +32,6 @@ public class JwtAuthFilter implements WebFilter {
 
     private boolean validateToken(String token) {
         // JWT 토큰 검증 로직 구현
-        return true; // 예제에서는 항상 true 반환
+        return true;
     }
 }

@@ -1,10 +1,10 @@
 package com.zerobase.user.service;
 
-import com.zerobase.common.dto.JwtResponse;
+import com.zerobase.user.dto.JwtResponse;
 import com.zerobase.user.dto.LoginForm;
-import com.zerobase.common.exception.CustomException;
-import com.zerobase.common.exception.ErrorCode;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.exception.CustomException;
+import com.zerobase.user.exception.ErrorCode;
+import com.zerobase.user.util.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

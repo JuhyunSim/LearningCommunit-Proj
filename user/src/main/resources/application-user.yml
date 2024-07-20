@@ -45,3 +45,12 @@ jasypt:
 aes:
   password: ENC(yGEk/YjqUhn34BwblUO5mQapkJ/2A+J3ux4JRuYFTiTEkXjy7D5hp5tZNATimMjOopJlQZaMmVk=)
   salt: ENC(g/sMb9wlbW7WYrHl4AyKfz0lehFy5An7RIQXR2FpFs63onbNvMCrkQ==)
+
+jwt:
+  secret: ENC(nv2zQD07ToGj4ULUjnwOrWI+5wjIQo6GE4QZFbDiGSenOxv1G714D0DUZKznorOX85bUP+yTSl8=)
+
+logging:
+  level:
+    root: debug
+    com.zerobase: debug
+

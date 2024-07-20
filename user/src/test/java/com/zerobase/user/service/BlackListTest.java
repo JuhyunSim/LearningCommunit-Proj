@@ -1,9 +1,8 @@
 package com.zerobase.user.service;
 
-import com.zerobase.common.service.BlackList;
-import com.zerobase.common.exception.CustomException;
-import com.zerobase.common.exception.ErrorCode;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.exception.CustomException;
+import com.zerobase.user.exception.ErrorCode;
+import com.zerobase.user.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

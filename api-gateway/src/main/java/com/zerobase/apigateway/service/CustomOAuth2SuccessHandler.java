@@ -1,10 +1,10 @@
 package com.zerobase.apigateway.service;
 
 import com.zerobase.apigateway.client.OAuth2LoginClient;
-import com.zerobase.common.dto.OAuth2UserDto;
-import com.zerobase.common.enums.Provider;
-import com.zerobase.common.enums.Role;
-import com.zerobase.common.oauth2User.SocialUserInfo;
+import com.zerobase.apigateway.dto.OAuth2UserDto;
+import com.zerobase.apigateway.enums.Provider;
+import com.zerobase.apigateway.enums.Role;
+import com.zerobase.apigateway.oauth2User.SocialUserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.reactive.ServerHttpResponse;

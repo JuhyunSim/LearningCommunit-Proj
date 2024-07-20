@@ -1,8 +1,8 @@
 package com.zerobase.user.service;
 
 import com.zerobase.user.entity.MemberEntity;
-import com.zerobase.common.exception.CustomException;
-import com.zerobase.common.exception.ErrorCode;
+import com.zerobase.user.exception.CustomException;
+import com.zerobase.user.exception.ErrorCode;
 import com.zerobase.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

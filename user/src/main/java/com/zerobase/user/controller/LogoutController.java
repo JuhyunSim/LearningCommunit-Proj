@@ -1,7 +1,7 @@
 package com.zerobase.user.controller;
 
 import com.zerobase.user.service.LogoutService;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

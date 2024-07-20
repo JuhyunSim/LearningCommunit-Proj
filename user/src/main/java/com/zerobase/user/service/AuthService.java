@@ -1,11 +1,11 @@
 package com.zerobase.user.service;
 
-import com.zerobase.common.dto.JwtResponse;
-import com.zerobase.common.dto.OAuth2UserDto;
-import com.zerobase.common.enums.Provider;
-import com.zerobase.common.exception.CustomException;
-import com.zerobase.common.exception.ErrorCode;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.dto.JwtResponse;
+import com.zerobase.user.dto.OAuth2UserDto;
+import com.zerobase.user.enums.Provider;
+import com.zerobase.user.exception.CustomException;
+import com.zerobase.user.exception.ErrorCode;
+import com.zerobase.user.util.JwtUtil;
 import com.zerobase.user.dto.LoginForm;
 import com.zerobase.user.entity.MemberEntity;
 import com.zerobase.user.enums.MemberLevel;
@@ -34,6 +34,7 @@ public class AuthService {
     private final SecurityMemberService securityMemberService;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final BlackList blackList;
 
     public JwtResponse authenticate(LoginForm loginForm) throws Exception {
         //loginId와 비밀번호 일치여부 확인 (불일치 시 예외 발생)
@@ -62,6 +63,11 @@ public class AuthService {
     }
 
     public JwtResponse refreshToken(String accessToken, String refreshToken) throws Exception {
+        //refresh token 이 블랙리스트에 있는지 확인
+        if (blackList.isListed(refreshToken)) {
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+        //토큰 유효성 검사(본인 확인)
         String username = jwtUtil.extractUsername(accessToken);
         if (!jwtUtil.validateToken(username,
                 refreshToken)

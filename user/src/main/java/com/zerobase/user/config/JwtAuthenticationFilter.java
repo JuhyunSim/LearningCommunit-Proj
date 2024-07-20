@@ -1,7 +1,6 @@
 package com.zerobase.user.config;
 
-import com.zerobase.common.service.BlackList;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +20,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final BlackList blackList;
     private final String ACCESS_TOKEN_HEADER = "Authorization";
-    private final String REFRESH_TOKEN_HEADER = "Refresh";
     private final String TOKEN_PREFIX = "Bearer ";
 
     //본인의 토큰이 맞고 유효기간이 지나지 않았을 때
@@ -35,18 +32,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain chain
     ) throws ServletException, IOException {
         String accessJwt = resolveToken(request, ACCESS_TOKEN_HEADER);
-        String refreshJwt = resolveToken(request, REFRESH_TOKEN_HEADER);
-        log.debug("request paht: {}", request.getRequestURI());
+        log.debug("request path: {}", request.getRequestURI());
+        log.debug("accessJwt: {}", accessJwt);
         if (accessJwt != null &&
-                jwtUtil.validateToken(jwtUtil.extractUsername(accessJwt), accessJwt)) {
-            if (refreshJwt != null && !blackList.isListed(refreshJwt)) {
-                Authentication authentication = jwtUtil.getAuthentication(accessJwt);
-                log.info("Filtering request token Authentication: {}", authentication);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info(String.format("[%s] -> %s ",
-                        jwtUtil.extractUsername(accessJwt), request.getRequestURI())
-                );
-            }
+            jwtUtil.validateToken(jwtUtil.extractUsername(accessJwt), accessJwt)) {
+            Authentication authentication = jwtUtil.getAuthentication(accessJwt);
+            log.info("Filtering request token Authentication: {}", authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info(String.format("[%s] -> %s ",
+                    jwtUtil.extractUsername(accessJwt), request.getRequestURI())
+            );
         }
         log.info("Filtering request token: {}", accessJwt);
         log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication());

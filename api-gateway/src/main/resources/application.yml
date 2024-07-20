@@ -2,8 +2,6 @@ server:
   port: 9001
 
 spring:
-  profiles:
-    include: common
   application:
     name: api-gateway
   cloud:
@@ -75,6 +73,15 @@ management:
     web:
       exposure:
         include: "*"
+
+jwt:
+  secret: ENC(nv2zQD07ToGj4ULUjnwOrWI+5wjIQo6GE4QZFbDiGSenOxv1G714D0DUZKznorOX85bUP+yTSl8=)
+
+jasypt:
+  encryptor:
+    property:
+      bean: jasyptStringEncryptor
+    password: ${SECRET_KEY}
 
 logging:
   level:

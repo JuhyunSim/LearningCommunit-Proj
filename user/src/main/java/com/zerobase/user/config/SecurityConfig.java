@@ -1,7 +1,6 @@
 package com.zerobase.user.config;
 
-import com.zerobase.common.service.BlackList;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.util.JwtUtil;
 import com.zerobase.user.service.SecurityMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,6 @@ public class SecurityConfig {
     private final SecurityMemberService securityMemberService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final BlackList blackList;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,7 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil, blackList);
+        return new JwtAuthenticationFilter(jwtUtil);
     }
 
     @Bean

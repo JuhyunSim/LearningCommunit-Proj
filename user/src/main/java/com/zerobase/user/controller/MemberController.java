@@ -4,7 +4,7 @@ import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.dto.UpdateMemberForm;
 import com.zerobase.user.service.MemberService;
-import com.zerobase.common.util.JwtUtil;
+import com.zerobase.user.util.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class MemberController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<MemberDto> myInfo(@RequestHeader("Authorization") String token) throws Exception {
+    public ResponseEntity<MemberDto> userInfo(@RequestHeader("Authorization") String token) throws Exception {
         String username = jwtUtil.extractUsername(token.substring(7));
         MemberDto myInfo = memberService.getMyInfo(username);
         return ResponseEntity.ok(myInfo);
@@ -38,7 +38,7 @@ public class MemberController {
 
     @PutMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<MemberDto> updateMyInfo(
+    public ResponseEntity<MemberDto> updateUserInfo(
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid UpdateMemberForm updateMemberForm) throws Exception {
         String loginId = jwtUtil.extractUsername(token.substring(7));
@@ -49,7 +49,7 @@ public class MemberController {
 
     @DeleteMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deleteAccount(
+    public ResponseEntity<Void> deleteUser(
             @RequestHeader("Authorization") String token
     ) throws Exception {
         String loginId = jwtUtil.extractUsername(token.substring(7));

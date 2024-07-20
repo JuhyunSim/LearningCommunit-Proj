@@ -3,8 +3,8 @@ package com.zerobase.user.entity;
 import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
-import com.zerobase.common.enums.Provider;
-import com.zerobase.common.enums.Role;
+import com.zerobase.user.enums.Provider;
+import com.zerobase.user.enums.Role;
 import com.zerobase.user.util.AESUtil;
 import jakarta.persistence.*;
 import lombok.*;
@@ -88,6 +88,7 @@ public class MemberEntity extends BaseEntity implements UserDetails {
 
     public MemberDto toDto(AESUtil aesUtil) throws Exception {
         return MemberDto.builder()
+                .id(this.id)
                 .username(this.username)
                 .email(this.email)
                 .phoneNumber(aesUtil.decrypt(this.phoneNumber))

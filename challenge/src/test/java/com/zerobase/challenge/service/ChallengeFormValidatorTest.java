@@ -34,7 +34,6 @@ class ChallengeFormValidatorTest {
     private UpdateChallengeForm updateChallengeForm;
     private ChallengeEntity challengeEntity;
 
-
     @BeforeEach
     void setUp() {
         createChallengeForm = CreateChallengeForm.builder()
@@ -70,6 +69,7 @@ class ChallengeFormValidatorTest {
                 .status(ONGOING)
                 .build();
     }
+
     //챌린지 기간이 1개월 미만일 때
     @Test
     void validateCreateChallengeForm_dueDateIsBeforeStartDate() {
@@ -111,6 +111,7 @@ class ChallengeFormValidatorTest {
         assertEquals("챌린지 진행 기간을 확인하세요", exception.getMessage());
     }
 
+    //진행 중인 챌린지의 마감 기한을 앞당겼을 때
     @Test
     void validateUpdateChallengeForm_whenDueDateIsShortened() {
         //given

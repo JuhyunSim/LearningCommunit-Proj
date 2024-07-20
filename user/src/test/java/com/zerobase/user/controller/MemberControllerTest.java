@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.entity.MemberEntity;
-import com.zerobase.user.enums.Role;
+import com.zerobase.common.enums.Role;
 import com.zerobase.user.service.MemberService;
 import com.zerobase.user.util.AESUtil;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ class MemberControllerTest {
                 .job(registerForm.getJob())
                 .interests(registerForm.getInterests())
                 .gender(registerForm.getGender())
-                .roles(List.of(Role.USER))
+                .roles(List.of(Role.ROLE_USER))
                 .build();;
 
         MemberDto memberDto = memberEntity.toDto(aesUtil);

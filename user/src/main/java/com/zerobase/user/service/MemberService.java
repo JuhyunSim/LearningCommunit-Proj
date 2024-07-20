@@ -1,11 +1,11 @@
 package com.zerobase.user.service;
 
+import com.zerobase.common.exception.CustomException;
+import com.zerobase.common.exception.ErrorCode;
 import com.zerobase.user.dto.MemberDto;
 import com.zerobase.user.dto.RegisterForm;
 import com.zerobase.user.dto.UpdateMemberForm;
 import com.zerobase.user.entity.MemberEntity;
-import com.zerobase.user.exception.CustomException;
-import com.zerobase.user.exception.ErrorCode;
 import com.zerobase.user.repository.MemberRepository;
 import com.zerobase.user.util.AESUtil;
 import lombok.RequiredArgsConstructor;

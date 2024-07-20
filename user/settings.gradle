@@ -1,2 +1,2 @@
 rootProject.name = 'user'
-includeBuild '../common'
+includeBuild("../common")

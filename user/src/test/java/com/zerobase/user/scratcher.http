@@ -3,15 +3,14 @@ GET http://localhost:8080/csrf-token
 Content-Type: application/json
 
 ###회원가입
-POST http://localhost:8080/users/register
+POST http://localhost:8081/users/register
 Content-Type: application/json
-X-CSRF-TOKEN: RL2BjwAYCWBH5Aq9RIhhM3DZ-Orh40ABsmrK7BfQkUmgZAMgJo_ivjd5PVZq0DmNc6VVVUfp1YuE2iQs11L71Sfn83uTVDJC
 
 {
-  "username": "testUser",
+  "username": "testUser2",
   "password": "Test@1234",
-  "email": "test@example.com",
-  "phoneNumber": "01012345678",
+  "email": "test2@example.com",
+  "phoneNumber": "01012345679",
   "nickName": "TestNick",
   "name": "Test Name",
   "birth": "1990-01-01",
@@ -21,20 +20,19 @@ X-CSRF-TOKEN: RL2BjwAYCWBH5Aq9RIhhM3DZ-Orh40ABsmrK7BfQkUmgZAMgJo_ivjd5PVZq0DmNc6
 }
 
 ### 자체 서비스 로그인
-POST http://localhost:8080/login
+POST http://localhost:8081/users/login
 Content-Type: application/json
 
 {
-  "username": "testUser",
+  "username": "testUser2",
   "password": "Test@1234"
 }
 
 ### 나의 정보 조회
-GET http://localhost:8080/users/me
+GET http://localhost:8081/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1MTM1MDMsImV4cCI6MTcyMDUxNDQwM30.ndsVHD55qWTvJCLMlb2dEuTQOHI4kTUvYdUfwqH84v0
-Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNTEzNTAzLCJleHAiOjE3MjExMTgzMDN9.6nrzQFZz-CmhZxErnGKCnBiUytBGkVJbx2YgMnuId3M
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIyIiwiaWF0IjoxNzIwNzk3NTU4LCJleHAiOjE3MjA3OTkzNTh9.fEihtc6SqZHo5x12isdQcig9KN_-ucrHL-ECkahM720
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyMiIsImlhdCI6MTcyMDc5NzU1OCwiZXhwIjoxNzIxNDAyMzU4fQ.uVkh1w0x90h6P_j52DAuLYkB958-xJUa0NS8ED4X2E0
 ### 정보 수정
 PUT http://localhost:8080/users/me
 Content-Type: application/json
@@ -54,10 +52,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjAzNTQ4OTksImV4cCI6MTcyMDM5MDg5OX0.r4TFfW9PHg1SgLojgb3EtTePEnudBLQyscU2xQW4w2A
 
 ### 토큰 재발급
-POST http://localhost:8080/refresh
+POST http://localhost:8081/users/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA1ODk2ODMsImV4cCI6MTcyMDU5MTQ4M30.fUXa_XrqWPiRuM5b-xTxgJlx5aC0441ffbS7jNgffK4
-Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNTg5NjgzLCJleHAiOjE3MjExOTQ0ODN9.GmoGHK8iXexHluxEbyhvWuVrTKfKxGTliP46WyS9kjc
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidGVzdFVzZXIiLCJpYXQiOjE3MjA3OTcxNDIsImV4cCI6MTcyMDc5ODk0Mn0.-aiQ1Gw4gbpO4WH4zz643UpjrjVjZHGLfOEmpJW2FdM
+Refresh: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6W10sInN1YiI6InRlc3RVc2VyIiwiaWF0IjoxNzIwNzk3MTQyLCJleHAiOjE3MjE0MDE5NDJ9.d-XXsCFpLR1AHRDnaBZCzjJcZyptGLjwBPT7g12fw-w
 
 
 ### 로그아웃

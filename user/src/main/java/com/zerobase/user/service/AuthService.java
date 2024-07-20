@@ -1,10 +1,15 @@
 package com.zerobase.user.service;
 
-import com.zerobase.user.dto.JwtResponse;
+import com.zerobase.common.dto.JwtResponse;
+import com.zerobase.common.dto.OAuth2UserDto;
+import com.zerobase.common.enums.Provider;
+import com.zerobase.common.exception.CustomException;
+import com.zerobase.common.exception.ErrorCode;
+import com.zerobase.common.util.JwtUtil;
 import com.zerobase.user.dto.LoginForm;
-import com.zerobase.user.exception.CustomException;
-import com.zerobase.user.exception.ErrorCode;
-import com.zerobase.user.util.JwtUtil;
+import com.zerobase.user.entity.MemberEntity;
+import com.zerobase.user.enums.MemberLevel;
+import com.zerobase.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,11 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +32,7 @@ import java.util.List;
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final SecurityMemberService securityMemberService;
+    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
     public JwtResponse authenticate(LoginForm loginForm) throws Exception {
@@ -44,6 +53,7 @@ public class AuthService {
         log.debug("UserService.loadUserByUsername(loginForm.getUsername()) successful");
         List<GrantedAuthority> authorities =
                 new ArrayList<>(userDetails.getAuthorities());
+        log.debug("Authorities : {}", authorities);
         final String accessJwt =
                 jwtUtil.generateToken(userDetails.getUsername(), authorities);
         final String refreshJwt = jwtUtil.generateRefreshToken(userDetails.getUsername());
@@ -61,10 +71,48 @@ public class AuthService {
         UserDetails userDetails = securityMemberService.loadUserByUsername(username);
         List<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
         String newAccessToken = jwtUtil.generateToken(username, authorities);
-//        log.info("refresh access token issued at: {}", jwtUtil.extractAllClaims(refreshToken).getIssuedAt());
-//        log.info("refresh access token expiration: {}", jwtUtil.extractAllClaims(refreshToken).getExpiration());
-//        log.info("newAccessToken issued at: {}", jwtUtil.extractAllClaims(newAccessToken).getIssuedAt());
-//        log.info("newAccessToken Expiration: {}", jwtUtil.extractAllClaims(newAccessToken).getExpiration());
         return new JwtResponse(newAccessToken, refreshToken);
+    }
+
+    public JwtResponse oauthLogin(OAuth2UserDto oAuth2UserDto) {
+        log.info("OAuth2UserDto attributes: {}", oAuth2UserDto.getAttributes());
+
+        List<GrantedAuthority> authorities =
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        Provider provider = oAuth2UserDto.getProvider();
+        String providerId = oAuth2UserDto.getProviderId();
+
+        // 사용자 정보 처리 및 JWT 생성
+        String accessToken =
+                jwtUtil.generateToken(
+                        providerId,
+                        authorities);
+        String refreshToken =
+                jwtUtil.generateRefreshToken(providerId);
+
+        // 사용자 정보 저장 또는 업데이트
+        Optional<MemberEntity> memberOptional =
+                memberRepository.findByProviderAndProviderId(provider, providerId);
+        MemberEntity memberEntity =
+                memberOptional.map(existingMember -> {
+                    log.info("Existing MemberEntity found: name {}", existingMember.getName());
+                    return existingMember;
+                }).orElseGet(() -> {MemberEntity newMember = MemberEntity.builder()
+                        .provider(provider)
+                        .providerId(providerId)
+                        .name(oAuth2UserDto.getName())
+                        .level(MemberLevel.BEGINNER)
+                        .points(0L)
+                        .roles(oAuth2UserDto.getRoles())
+                        .build();
+                    memberRepository.save(newMember);
+                    log.info("New MemberEntity saved: name {}", newMember.getName());
+                    return newMember;
+                });
+        return JwtResponse.builder()
+                .accessJwt(accessToken)
+                .refreshJwt(refreshToken)
+                .build();
     }
 }

@@ -2,8 +2,8 @@ package com.zerobase.user.dto;
 
 import com.zerobase.user.enums.Gender;
 import com.zerobase.user.enums.MemberLevel;
-import com.zerobase.user.enums.Provider;
-import com.zerobase.user.enums.Role;
+import com.zerobase.common.enums.Provider;
+import com.zerobase.common.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

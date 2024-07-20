@@ -1,0 +1,79 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: user-service
+#          uri: lb://USER-SERVICE
+#          predicates:
+#            - Path=/users/**
+#          filters:
+#            - StripPrefix=1
+#        - id: admin-service
+#          uri: lb://ADMIN-SERVICE
+#          predicates:
+#            - Path=/admin/**
+#          filters:
+#            - StripPrefix=1
+#        - id: challenge-service
+#          uri: lb://CHALLENGE-SERVICE
+#          predicates:
+#            - Path=/challenges/**
+#          filters:
+#            - StripPrefix=1
+#        - id: diary-service
+#          uri: lb://DIARY-SERVICE
+#          predicates:
+#            - Path=/diaries/**
+#          filters:
+#            - StripPrefix=1
+#        - id: comment-service
+#          uri: lb://COMMENT-SERVICE
+#          predicates:
+#            - Path=/comments/**
+#          filters:
+#            - StripPrefix=1
+#        - id: point-service
+#          uri: lb://POINT-SERVICE
+#          predicates:
+#            - Path=/points/**
+#          filters:
+#            - StripPrefix=1
+#        - id: file-service
+#          uri: lb://FILE-SERVICE
+#          predicates:
+#            - Path=/files/**
+#          filters:
+#            - StripPrefix=1
+#        - id: search-service
+#          uri: lb://SEARCH-SERVICE
+#          predicates:
+#            - Path=/search/**
+#          filters:
+#            - StripPrefix=1
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+  server:
+    # 서버가 요청을 받기 전 대기할 초기 시간(ms)
+    # default 5분 : 실무에서는 보통 모든 서비스가 등록 되길 기다리기 위해 5분 후 정보를 공유
+    # 개인 프로젝트인 만큼 빠른 등록을 위해 5ms로 설정
+    wait-time-in-ms-when-sync-empty: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+

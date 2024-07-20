@@ -1,6 +1,6 @@
 package com.zerobase.challenge.client;
 
-import com.zerobase.user.dto.MemberDto;
+import com.zerobase.challenge.domain.dto.MemberDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

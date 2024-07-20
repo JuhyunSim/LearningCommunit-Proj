@@ -1,0 +1,47 @@
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: challenge
+  datasource:
+    url: ENC(cGjAWFkRj3kGcJQCycAFNIV0oxhrFN6Bcl7hMhZ5YY1l8L9r4mFgjoTpKpeUgyUfqJRsfZWDBe5tyuMy1TDlETGLRFhUzNZY)
+    username: ENC(YwS1VR1NKFYkgTpJoFd4s0rP5VT0CZbs)
+    password: ENC(MqwgTk7hSognuNoHqSChFudMokjZcFXS)
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jwt:
+  secret: ENC(nv2zQD07ToGj4ULUjnwOrWI+5wjIQo6GE4QZFbDiGSenOxv1G714D0DUZKznorOX85bUP+yTSl8=)
+
+aes:
+  password: ENC(yGEk/YjqUhn34BwblUO5mQapkJ/2A+J3ux4JRuYFTiTEkXjy7D5hp5tZNATimMjOopJlQZaMmVk=)
+  salt: ENC(g/sMb9wlbW7WYrHl4AyKfz0lehFy5An7RIQXR2FpFs63onbNvMCrkQ==)
+
+jasypt:
+  encryptor:
+    property:
+      bean: jasyptStringEncryptor
+    password: ${SECRET_KEY}

@@ -18,6 +18,16 @@ public interface ChallengeRepository extends JpaRepository<ChallengeEntity, Long
     @Query("SELECT c" +
             " FROM challenge c " +
             "WHERE c.id = :id AND " +
+            "c.userId = :userId AND " +
             "c.status <> 'COMPLETED' AND c.status <> 'EXPIRED'")
-    Optional<ChallengeEntity> findUpdatableById(Long id);
+    Optional<ChallengeEntity> findUpdatableByIdAndUserId(Long id, Long userId);
+
+    List<ChallengeEntity> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+
+    Optional<ChallengeEntity> findByIdAndUserId(Long id, Long userId);
+
+
+    Optional<ChallengeEntity> findByIdAndUserIdAndStatusIn(
+            Long challengeId, Long userId, List<ChallengeStatus> statuses
+    );
 }

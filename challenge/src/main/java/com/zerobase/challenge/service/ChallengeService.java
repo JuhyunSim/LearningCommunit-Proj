@@ -45,7 +45,7 @@ public class ChallengeService {
                 createChallengeForm.getStartDate().equals(new Date()) ?
                         ONGOING : PENDING
         );
-        return challengeRepository.save(challengeEntity).toResponseDto();
+        return challengeRepository.save(challengeEntity).toChallengeDto();
     }
 
     @Scheduled(cron = "0 0 1 * * ?") // 매일 밤 1시에 실행
@@ -64,15 +64,15 @@ public class ChallengeService {
             String token,
             UpdateChallengeForm updateChallengeForm
     ) throws Exception {
+        //토큰 소유자와 요청 form의 유저아이디가 일치해야 함
+        //기간 만료 똔ㄴ 완료 상태가 아닌 챌린지
         ChallengeEntity challengeEntity =
-                challengeRepository.findUpdatableById(updateChallengeForm.getChallengeId())
+                challengeRepository.findUpdatableByIdAndUserId(
+                        updateChallengeForm.getChallengeId(), getUserId(token))
                         .orElseThrow(
-                                () -> new CustomException(ErrorCode.UPDATABLE_CHALLENGE_NOT_FOUNT)
+                                () -> new CustomException(ErrorCode.UPDATABLE_CHALLENGE_NOT_FOUND)
                         );
 
-        //token 소유자의 아이디와 챌린지의 유저아이디 일치 확인
-        Long userId = getUserId(token);
-        challengeFormValidator.validateUserEntity(userId, challengeEntity);
         //duedate & status 검증
         challengeFormValidator.validateUpdateChallengeForm(
                 challengeEntity, updateChallengeForm
@@ -89,27 +89,63 @@ public class ChallengeService {
 
         ChallengeEntity updatedChallenge =
                 challengeRepository.save(updatedChallengeEntity);
-        return updatedChallenge.toResponseDto();
+        return updatedChallenge.toChallengeDto();
     }
 
     //챌린지 취소
     public ChallengeResponseDto cancelStatus(
             String token, Long challengeId
             ) throws Exception {
+        //토큰 소유자와 요청 챌린지 게시물의 유저아이디가 일치해야 함
+        //기간 만료 또는 완료 상태가 아닌 챌린지
         ChallengeEntity challengeEntity = challengeRepository
-                .findUpdatableById(challengeId)
+                .findUpdatableByIdAndUserId(challengeId, getUserId(token))
                 .orElseThrow(
-                        () -> new CustomException(ErrorCode.UPDATABLE_CHALLENGE_NOT_FOUNT)
+                        () -> new CustomException(ErrorCode.UPDATABLE_CHALLENGE_NOT_FOUND)
                 );
-
-        //token 소유자의 아이디와 챌린지의 유저아이디 일치 확인
-        Long userId = getUserId(token);
-        challengeFormValidator.validateUserEntity(userId, challengeEntity);
 
         // 챌린지 상태 정보 수정
         challengeEntity.setStatus(CANCELLED);
 
-        return challengeRepository.save(challengeEntity).toResponseDto();
+        return challengeRepository.save(challengeEntity).toChallengeDto();
+    }
+
+    //본인 챌린지 리스트 조회(간단조회)
+    public List<ChallengeResponseDto.ChallengeSimpleDto> getChallenges(
+            String token) throws Exception {
+        Long userId = getUserId(token);
+        List<ChallengeEntity> challengeEntities =
+                challengeRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+
+        return challengeEntities.stream()
+                .map(ChallengeEntity::toChallengeSimpleDto)
+                .toList();
+    }
+
+    //챌린지 조회(상세정보 조회)
+    public ChallengeResponseDto getChallenge(String token, Long challengeId) throws Exception {
+        Long userId = getUserId(token);
+        //본인 챌린지 조회
+        ChallengeEntity challengeEntity =
+                challengeRepository.findByIdAndUserId(challengeId, userId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHALLENGE_NOT_FOUND)
+        );
+
+        return challengeEntity.toChallengeDto();
+    }
+
+    public void deleteChallenge(String token, Long challengeId) throws Exception {
+        //취소, 완료, 대기 상태인 챌린지만 삭제할 수 있음
+        //본인 챌린지만 삭제할 수 있음
+        List<ChallengeStatus> statuses =
+                List.of(CANCELLED, COMPLETED, PENDING);
+        Long userId = getUserId(token);
+        ChallengeEntity challengeEntity =
+                challengeRepository.findByIdAndUserIdAndStatusIn(
+                        challengeId, userId, statuses).orElseThrow(
+                        () -> new CustomException(ErrorCode.DELETABLE_CHALLENGE_NOT_FOUND)
+                );
+        challengeRepository.delete(challengeEntity);
     }
 
     private Long getUserId(String token) throws Exception {

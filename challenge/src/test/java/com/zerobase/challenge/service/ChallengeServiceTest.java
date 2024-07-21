@@ -3,12 +3,12 @@ package com.zerobase.challenge.service;
 import com.zerobase.challenge.client.MemberFeignClient;
 import com.zerobase.challenge.domain.dto.ChallengeResponseDto;
 import com.zerobase.challenge.domain.dto.CreateChallengeForm;
+import com.zerobase.challenge.domain.dto.MemberDto;
 import com.zerobase.challenge.domain.dto.UpdateChallengeForm;
 import com.zerobase.challenge.domain.entity.ChallengeEntity;
 import com.zerobase.challenge.domain.repository.ChallengeRepository;
 import com.zerobase.challenge.exception.CustomException;
 import com.zerobase.challenge.exception.ErrorCode;
-import com.zerobase.challenge.domain.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import static com.zerobase.challenge.domain.enums.Category.LANGUAGE;
 import static com.zerobase.challenge.domain.enums.ChallengeStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -156,7 +158,7 @@ class ChallengeServiceTest {
                         challengeEntity.getStatus()
                 );
 
-        when(challengeRepository.findUpdatableById(1L)).thenReturn(Optional.of(challengeEntity));
+        when(challengeRepository.findUpdatableByIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.of(challengeEntity));
         when(memberFeignClient.userInfo(token)).thenReturn(ResponseEntity.ok(memberDto));
         when(challengeRepository.save(any(ChallengeEntity.class))).thenReturn(updatedChallengeEntity);
 
@@ -188,7 +190,7 @@ class ChallengeServiceTest {
 
 
 
-        when(challengeRepository.findUpdatableById(1L)).thenReturn(Optional.of(challengeEntity));
+        when(challengeRepository.findUpdatableByIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.of(challengeEntity));
         when(memberFeignClient.userInfo(token)).thenReturn(ResponseEntity.ok(memberDto));
         challengeEntity.setStatus(CANCELLED);
         when(challengeRepository.save(any(ChallengeEntity.class))).thenReturn(challengeEntity);
@@ -220,5 +222,175 @@ class ChallengeServiceTest {
         //then
         verify(challengeRepository, times(1)).save(any(ChallengeEntity.class));
         assertEquals(EXPIRED, challengeEntity.getStatus());
+    }
+
+
+    @Test
+    void getChallenges_success() throws Exception {
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(1L)
+                        .build();
+        challengeEntity1.setCreatedAt(LocalDateTime.of(2024, 8, 1, 0, 0, 0));
+
+        ChallengeEntity challengeEntity2 =
+                ChallengeEntity.builder()
+                        .id(2L)
+                        .userId(2L)
+                        .build();
+        challengeEntity2.setCreatedAt(LocalDateTime.of(2024, 8, 1, 2, 0, 0));
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+        given(challengeRepository.findAllByUserIdOrderByCreatedAtDesc(anyLong()))
+                .willReturn(List.of(challengeEntity1, challengeEntity2));
+        //when
+        List<ChallengeResponseDto.ChallengeSimpleDto> result =
+                challengeService.getChallenges(token);
+        //then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals(2L, result.get(1).getId());
+        assertEquals(LocalDateTime.of(
+                2024, 8, 1, 2, 0, 0),
+                result.get(1).getCreatedAt());
+    }
+
+    @Test
+    void getChallenge_success() throws Exception {
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(1L)
+                        .title("title")
+                        .description("description")
+                        .build();
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+        given(challengeRepository.findByIdAndUserId(anyLong(), anyLong()))
+                .willReturn(Optional.of(challengeEntity1));
+        //when
+        ChallengeResponseDto result = challengeService.getChallenge(token, 1L);
+
+        //then
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals(1L, result.getUserId());
+        assertEquals("title", result.getTitle());
+        assertEquals("description", result.getDescription());
+    }
+
+    @Test
+    void getChallenge_fail_userIdAndChallengeNotMatch() throws Exception {
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(2L)
+                        .title("title")
+                        .description("description")
+                        .build();
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+
+        //when
+        CustomException exception =
+                assertThrows(CustomException.class,
+                        () -> challengeService.getChallenge(token, 1L));
+        //then
+        assertEquals("해당 챌린지를 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    void deleteChallenge_success() throws Exception{
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(1L)
+                        .title("title")
+                        .description("description")
+                        .status(PENDING)
+                        .build();
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+        given(challengeRepository.findByIdAndUserIdAndStatusIn(anyLong(), anyLong(), any()))
+                .willReturn(Optional.of(challengeEntity1));
+        //when
+        challengeService.deleteChallenge(token, 1L);
+
+        //then
+        verify(challengeRepository, times(1)).delete(challengeEntity1);
+    }
+
+    @Test
+    void deleteChallenge_fail_becauseOfStatus() throws Exception{
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(1L)
+                        .title("title")
+                        .description("description")
+                        .status(ONGOING)
+                        .build();
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+
+        //when
+        CustomException exception =
+                assertThrows(CustomException.class,
+                        () -> challengeService.deleteChallenge(token, 1L));
+        //then
+        assertEquals("삭제 가능한 챌린지를 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    void deleteChallenge_fail_IdAndUserIDNotMatch() throws Exception{
+        //given
+        token = "Bearer testToken";
+        memberDto = MemberDto.builder()
+                .id(1L)
+                .build();
+        ChallengeEntity challengeEntity1 =
+                ChallengeEntity.builder()
+                        .id(1L)
+                        .userId(2L)
+                        .title("title")
+                        .description("description")
+                        .status(PENDING)
+                        .build();
+
+        given(memberFeignClient.userInfo(token)).willReturn(ResponseEntity.ok(memberDto));
+
+        //when
+        CustomException exception =
+                assertThrows(CustomException.class,
+                        () -> challengeService.deleteChallenge(token, 1L));
+        //then
+        assertEquals("삭제 가능한 챌린지를 찾을 수 없습니다.", exception.getMessage());
     }
 }

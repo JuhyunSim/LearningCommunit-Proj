@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     INVALID_CHALLENGE_DUEDATE(HttpStatus.BAD_REQUEST, "챌린지 진행 기간을 확인하세요"),
     CHALLENGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 챌린지를 찾을 수 없습니다."),
-    UPDATABLE_CHALLENGE_NOT_FOUNT(HttpStatus.BAD_REQUEST, "수정 가능한 챌린지를 찾을 수 없습니다."),
+    DELETABLE_CHALLENGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "삭제 가능한 챌린지를 찾을 수 없습니다."),
+    UPDATABLE_CHALLENGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "수정 가능한 챌린지를 찾을 수 없습니다."),
     SHORTEN_DUEDATE_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "이미 진행 중인 챌린지는 기한을 앞당길 수 없습니다."),
     CHALLENGE_STATUS_NOT_MODIFIABLE(HttpStatus.BAD_REQUEST,
             "이미 진행 중이거나 완료 또는 만료 상태인 챌린지는 변경할 수 없습니다."),

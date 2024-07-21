@@ -58,12 +58,13 @@ public class ChallengeFormValidator {
     }
 
     public void validateDuedate(ChangeChallengeForm changeChallengeForm) {
-        //dueDate 기간 안에 이미 등록한 챌린지가 있으면 등록 불가
+        //dueDate 기간 안에 이미 챌린지가 있으면 등록 불가
         boolean existOnGoingChallenge =
                 challengeRepository.findAllByUserId(changeChallengeForm.getUserId())
                         .stream()
-                        .anyMatch(challenge -> challenge.getStatus()
-                                .equals(ONGOING));
+                        .anyMatch(challenge ->
+                                challenge.getDueDate().isEqual(changeChallengeForm.getStartDate()) ||
+                                challenge.getDueDate().isAfter(changeChallengeForm.getStartDate()));
         if (existOnGoingChallenge) {
             throw new CustomException(ErrorCode.INVALID_CHALLENGE_DUEDATE);
         }

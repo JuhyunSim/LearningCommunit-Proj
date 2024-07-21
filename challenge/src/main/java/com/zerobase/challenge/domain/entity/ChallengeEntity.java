@@ -5,6 +5,7 @@ import com.zerobase.challenge.domain.enums.Category;
 import com.zerobase.challenge.domain.enums.ChallengeStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.AuditOverride;
 
 import java.time.LocalDate;
 
@@ -14,11 +15,13 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChallengeEntity {
+@AuditOverride(forClass = BaseEntity.class)
+public class ChallengeEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long userId;
 
     @Column(nullable = false)
@@ -47,9 +50,10 @@ public class ChallengeEntity {
     @Enumerated(EnumType.STRING)
     private ChallengeStatus status;
 
-    public ChallengeResponseDto toResponseDto() {
+    public ChallengeResponseDto toChallengeDto() {
         return ChallengeResponseDto.builder()
                 .id(id)
+                .userId(userId)
                 .username(username)
                 .title(title)
                 .category(category)
@@ -58,6 +62,21 @@ public class ChallengeEntity {
                 .dueDate(dueDate)
                 .description(description)
                 .status(status)
+                .createdAt(getCreatedAt())
+                .lastModifiedAt(getLastModifiedAt())
+                .build();
+    }
+
+    public ChallengeResponseDto.ChallengeSimpleDto toChallengeSimpleDto() {
+        return ChallengeResponseDto.ChallengeSimpleDto.builder()
+                .id(id)
+                .username(username)
+                .title(title)
+                .status(status)
+                .startDate(startDate)
+                .dueDate(dueDate)
+                .createdAt(getCreatedAt())
+                .lastModifiedAt(getLastModifiedAt())
                 .build();
     }
 

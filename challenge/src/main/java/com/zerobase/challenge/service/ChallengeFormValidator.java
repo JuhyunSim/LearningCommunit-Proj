@@ -63,8 +63,9 @@ public class ChallengeFormValidator {
                 challengeRepository.findAllByUserId(changeChallengeForm.getUserId())
                         .stream()
                         .anyMatch(challenge ->
-                                challenge.getDueDate().isEqual(changeChallengeForm.getStartDate()) ||
-                                challenge.getDueDate().isAfter(changeChallengeForm.getStartDate()));
+                                changeChallengeForm.getDueDate().isAfter(challenge.getStartDate()) &&
+                                                changeChallengeForm.getDueDate().isBefore(challenge.getDueDate())
+                        );
         if (existOnGoingChallenge) {
             throw new CustomException(ErrorCode.INVALID_CHALLENGE_DUEDATE);
         }

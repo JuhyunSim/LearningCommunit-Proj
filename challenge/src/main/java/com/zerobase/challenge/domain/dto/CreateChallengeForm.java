@@ -22,7 +22,7 @@ public class CreateChallengeForm implements ChangeChallengeForm{
     private Long userId;
 
     @NotNull
-    private String username;
+    private String userNickName;
     @NotNull
     private String title;
     @NotNull(message = "분야를 설정해주세요.")
@@ -47,7 +47,7 @@ public class CreateChallengeForm implements ChangeChallengeForm{
     public ChallengeEntity toEntity() {
         return ChallengeEntity.builder()
                 .userId(userId)
-                .username(username)
+                .userNickName(userNickName)
                 .title(title)
                 .category(category)
                 .goal(goal)

@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/users/oauth2",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/csrf-token").permitAll()
+                                "/csrf-token",
+                                "/search/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2Login(oauth2LoginSpec ->

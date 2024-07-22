@@ -3,6 +3,7 @@ package com.zerobase.challenge.domain.entity;
 import com.zerobase.challenge.domain.dto.ChallengeResponseDto;
 import com.zerobase.challenge.domain.enums.Category;
 import com.zerobase.challenge.domain.enums.ChallengeStatus;
+import com.zerobase.kafka.dto.KafkaChallengeEventDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.AuditOverride;
@@ -25,7 +26,7 @@ public class ChallengeEntity extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
-    private String username;
+    private String userNickName;
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -54,7 +55,7 @@ public class ChallengeEntity extends BaseEntity {
         return ChallengeResponseDto.builder()
                 .id(id)
                 .userId(userId)
-                .username(username)
+                .userNickName(userNickName)
                 .title(title)
                 .category(category)
                 .goal(goal)
@@ -70,7 +71,7 @@ public class ChallengeEntity extends BaseEntity {
     public ChallengeResponseDto.ChallengeSimpleDto toChallengeSimpleDto() {
         return ChallengeResponseDto.ChallengeSimpleDto.builder()
                 .id(id)
-                .username(username)
+                .userNickName(userNickName)
                 .title(title)
                 .status(status)
                 .startDate(startDate)
@@ -80,4 +81,20 @@ public class ChallengeEntity extends BaseEntity {
                 .build();
     }
 
+    public KafkaChallengeEventDto toKafkaChallengeEventDto() {
+        return KafkaChallengeEventDto.builder()
+                .id(id)
+                .userId(userId)
+                .userNickName(userNickName)
+                .title(title)
+                .category(com.zerobase.kafka.enums.Category.valueOf(category.name()))
+                .goal(goal)
+                .startDate(startDate)
+                .dueDate(dueDate)
+                .description(description)
+                .status(com.zerobase.kafka.enums.ChallengeStatus.valueOf(status.name()))
+                .createdAt(getCreatedAt())
+                .lastModifiedAt(getLastModifiedAt())
+                .build();
+    }
 }

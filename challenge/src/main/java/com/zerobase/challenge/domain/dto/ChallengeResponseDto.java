@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ChallengeResponseDto {
     private Long id;
     private Long userId;
-    private String username;
+    private String userNickName;
     private String title;
     private Category category;
     private String goal;
@@ -30,7 +30,7 @@ public class ChallengeResponseDto {
     @Setter
     public static class ChallengeSimpleDto {
         private Long id;
-        private String username;
+        private String userNickName;
         private String title;
         private ChallengeStatus status;
         private LocalDate startDate;

@@ -66,7 +66,8 @@ public class AuthorizationFilter implements GlobalFilter, Ordered {
         Authentication authentication = jwtUtil.getAuthentication(token);
         return chain.filter(exchange)
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication))
-                .doOnSuccess(aVoid -> log.debug("Successfully set SecurityContext"));
+                .doOnSuccess(aVoid -> log.debug("Successfully set SecurityContext"))
+                .doOnError(e -> log.error("Error setting SecurityContext", e));
     }
 
 

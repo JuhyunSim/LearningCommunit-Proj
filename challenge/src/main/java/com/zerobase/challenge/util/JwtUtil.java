@@ -1,6 +1,7 @@
-package com.zerobase.apigateway.util;
+package com.zerobase.challenge.util;
 
-import com.zerobase.apigateway.enums.Role;
+
+import com.zerobase.challenge.domain.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
@@ -113,3 +114,4 @@ public class JwtUtil {
                 "", userDetails.getAuthorities());
     }
 }
+

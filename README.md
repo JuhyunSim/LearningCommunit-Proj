@@ -36,7 +36,7 @@
   - DELETE /users/me
   - POST /logout
 
-### 관리자 [  ]
+### 관리자 [ x ]
 [회원 조회]
 - 전체 회원 조회
 - 개별 회원 조회
@@ -129,7 +129,7 @@
   - DELETE /diaries/{id}
 
 
-## 검색 기능 (일반회원, 관리자 공통)
+## 검색 기능 (일반회원, 관리자 공통) [ 미완 ]
 ---
 [챌린지 전체 조회]
 - 제목, 날짜, 작성자 보기
@@ -165,7 +165,7 @@
   - GET /search/journals
 
 
-## 댓글 기능 (일반회원, 관리자 공통)
+## 댓글 기능 (일반회원, 관리자 공통) [ x ]
 ---
 [댓글 작성 기능]
 - 일지에 댓글 작성
@@ -191,6 +191,7 @@
 - 프레임워크 : Spring Boot 3.3.1
 - 데이터베이스 : PostgreSQL
 - 파일시스템 : AWS s3
+- 인프라 : KAFKA, Spring Cloud Gateway
 
 ## ERD
 ![학습 커뮤니티 ERD](images/learningCommunityERD.png)

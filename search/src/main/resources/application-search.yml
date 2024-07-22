@@ -1,0 +1,40 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: search
+
+  datasource:
+    url: ENC(cGjAWFkRj3kGcJQCycAFNIV0oxhrFN6Bcl7hMhZ5YY1l8L9r4mFgjoTpKpeUgyUfqJRsfZWDBe5tyuMy1TDlETGLRFhUzNZY)
+    username: ENC(YwS1VR1NKFYkgTpJoFd4s0rP5VT0CZbs)
+    password: ENC(MqwgTk7hSognuNoHqSChFudMokjZcFXS)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jasypt:
+  encryptor:
+    property:
+      bean: jasyptStringEncryptor
+    password: ${SECRET_KEY}

@@ -28,6 +28,7 @@ ext {
 }
 
 dependencies {
+	implementation 'com.zerobase:kafka'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -41,6 +42,7 @@ dependencies {
 	implementation 'org.jasypt:jasypt:1.9.3'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'org.springframework.data:spring-data-envers:3.3.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	//open feign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
@@ -53,6 +55,12 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+
+	//kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+
+
 
 }
 

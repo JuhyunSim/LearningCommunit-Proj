@@ -51,6 +51,5 @@ jwt:
 
 logging:
   level:
-    root: debug
-    com.zerobase: debug
+    com.zerobase: info
 

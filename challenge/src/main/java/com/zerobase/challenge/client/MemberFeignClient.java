@@ -14,7 +14,7 @@ public interface MemberFeignClient {
 
     @GetMapping("/users/me")
     @PreAuthorize("hasRole('USER')")
-    ResponseEntity<MemberDto> userInfo(
-            @RequestHeader("Authorization") String token) throws Exception;
-
+    public ResponseEntity<MemberDto> userInfo(
+            @RequestHeader("Authorization") String token
+    ) throws Exception;
 }

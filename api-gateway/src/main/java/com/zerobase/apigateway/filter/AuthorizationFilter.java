@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -27,17 +28,19 @@ public class AuthorizationFilter implements GlobalFilter, Ordered {
                     "/users/register",
                     "/login/**",
                     "/login",
-                    "/"
+                    "/",
+                    "/search/**"
             );
     private final String ACCESS_HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getPath().toString();
         log.debug("request path: {}", path);
 
-        if (EXCLUDE_PATHS.contains(path)) {
+        if (isExcludedPath(path)) {
             return chain.filter(exchange);
         }
 
@@ -70,6 +73,9 @@ public class AuthorizationFilter implements GlobalFilter, Ordered {
                 .doOnError(e -> log.error("Error setting SecurityContext", e));
     }
 
+    private boolean isExcludedPath(String path) {
+        return EXCLUDE_PATHS.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+    }
 
     @Override
     public int getOrder() {

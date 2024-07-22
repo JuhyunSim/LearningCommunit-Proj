@@ -16,8 +16,11 @@ spring:
           uri: lb://challenge
           predicates:
             - Path=/challenges/**
-#      default-filters:
-#        - name: AuthorityBasedRoutingFilter
+
+        - id: search
+          uri: lb://search
+          predicates:
+            - Path=/search/**
   security:
     oauth2:
       client:

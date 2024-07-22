@@ -59,7 +59,7 @@ class ChallengeServiceTest {
 
         CreateChallengeForm createChallengeForm = CreateChallengeForm.builder()
                 .title("Test Challenge")
-                .username("testUser")
+                .userNickName("testUser")
                 .goal("Goal Test")
                 .startDate(LocalDate.of(2024, 8, 1))
                 .dueDate(LocalDate.of(2025, 8, 1))
@@ -80,7 +80,7 @@ class ChallengeServiceTest {
 
         assertNotNull(result);
         assertEquals("Test Challenge", result.getTitle());
-        assertEquals("testUser", result.getUsername());
+        assertEquals("testUser", result.getUserNickName());
         assertEquals("Goal Test", result.getGoal());
         assertEquals(LocalDate.of(2024, 8, 1), result.getStartDate());
         assertEquals(LocalDate.of(2025, 8, 1), result.getDueDate());
@@ -154,7 +154,7 @@ class ChallengeServiceTest {
                 updateChallengeForm.toUpdatedChallengeEntity(
                         challengeEntity.getId(),
                         challengeEntity.getUserId(),
-                        challengeEntity.getUsername(),
+                        challengeEntity.getUserNickName(),
                         challengeEntity.getStatus()
                 );
 

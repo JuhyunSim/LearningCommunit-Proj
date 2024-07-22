@@ -46,12 +46,12 @@ public class UpdateChallengeForm implements ChangeChallengeForm{
     private String description;
 
     public ChallengeEntity toUpdatedChallengeEntity(
-            Long challengeId, Long userId, String username, ChallengeStatus status
+            Long challengeId, Long userId, String userNickName, ChallengeStatus status
     ) {
         return ChallengeEntity.builder()
                 .id(challengeId)
                 .userId(userId)
-                .username(username)
+                .userNickName(userNickName)
                 .title(title)
                 .category(category)
                 .goal(goal)
